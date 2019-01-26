@@ -10,13 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Character extends AbstractEntity
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $name;
@@ -26,36 +19,119 @@ class Character extends AbstractEntity
      */
     private $description;
 
+    /**
+     * @ORM\Column(type="string", length=1, nullable=false)
+     */
+    private $sex;
+
+    /**
+     * @ORM\Column(type="string", length=2, nullable=true)
+     */
+    private $gender;
+
+    /**
+     * @ORM\Column(type="int", nullable=false)
+     */
     private $birthDate;
 
+    /**
+     * @ORM\Column(type="int", nullable=false)
+     */
     private $deathDate;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getName(): ?string
+    /**
+     * @return mixed
+     */
+    public function getName()
     {
         return $this->name;
     }
 
-    public function setName(string $name): self
+    /**
+     * @param mixed $name
+     */
+    public function setName($name): void
     {
         $this->name = $name;
-
-        return $this;
     }
 
-    public function getDescription(): ?string
+    /**
+     * @return mixed
+     */
+    public function getDescription()
     {
         return $this->description;
     }
 
-    public function setDescription(?string $description): self
+    /**
+     * @param mixed $description
+     */
+    public function setDescription($description): void
     {
         $this->description = $description;
+    }
 
-        return $this;
+    /**
+     * @return mixed
+     */
+    public function getSex()
+    {
+        return $this->sex;
+    }
+
+    /**
+     * @param mixed $sex
+     */
+    public function setSex($sex): void
+    {
+        $this->sex = $sex;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getGender()
+    {
+        return $this->gender;
+    }
+
+    /**
+     * @param mixed $gender
+     */
+    public function setGender($gender): void
+    {
+        $this->gender = $gender;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getBirthDate()
+    {
+        return $this->birthDate;
+    }
+
+    /**
+     * @param mixed $birthDate
+     */
+    public function setBirthDate($birthDate): void
+    {
+        $this->birthDate = $birthDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDeathDate()
+    {
+        return $this->deathDate;
+    }
+
+    /**
+     * @param mixed $deathDate
+     */
+    public function setDeathDate($deathDate): void
+    {
+        $this->deathDate = $deathDate;
     }
 }
