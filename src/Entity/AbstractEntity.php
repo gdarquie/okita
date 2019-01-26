@@ -2,7 +2,16 @@
 
 namespace App\Entity;
 
+use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\MappedSuperclass;
+use App\Component\Id\Uuid;
 
+/**
+ * Abstract base class to be extended by my entity classes with same fields.
+ *
+ * @MappedSuperclass
+ * @ORM\HasLifecycleCallbacks
+ */
 abstract class AbstractEntity
 {
     /**
@@ -32,16 +41,12 @@ abstract class AbstractEntity
     protected $uuid;
 
     /**
-     * @ORM\PrePersist
-     * @ORM\PreUpdate
+     * AbstractEntity constructor.
      */
-    public function updatedTimestamps()
+    public function __construct()
     {
-        $this->setDateModification(new \DateTime('now'));
-
-        if ($this->getDateCreation() == null) {
-            $this->setDateCreation(new \DateTime('now'));
-        }
+        $uuid = new Uuid();
+        $this->setUuid($uuid->gen_uuid());
     }
 
     /**
@@ -106,6 +111,19 @@ abstract class AbstractEntity
     public function setUuid($uuid): void
     {
         $this->uuid = $uuid;
+    }
+
+    /**
+     * @ORM\PrePersist
+     * @ORM\PreUpdate
+     */
+    public function updatedTimestamps()
+    {
+        $this->setUpdatedAt(new \DateTime('now'));
+
+        if ($this->setCreatedAt() == null) {
+            $this->setCreatedAt(new \DateTime('now'));
+        }
     }
 
 }

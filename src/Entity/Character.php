@@ -30,12 +30,12 @@ class Character extends AbstractEntity
     private $gender;
 
     /**
-     * @ORM\Column(type="int", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $birthDate;
 
     /**
-     * @ORM\Column(type="int", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
     private $deathDate;
 

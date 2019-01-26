@@ -10,13 +10,6 @@ use Doctrine\ORM\Mapping as ORM;
 class Action extends AbstractEntity
 {
     /**
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
-    private $id;
-
-    /**
      * @ORM\Column(type="string", length=255)
      */
     private $title;
@@ -26,16 +19,10 @@ class Action extends AbstractEntity
      */
     private $description;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
-
-    public function getTitle(): ?string
-    {
-        return $this->title;
-    }
-
+    /**
+     * @param string $title
+     * @return Action
+     */
     public function setTitle(string $title): self
     {
         $this->title = $title;
@@ -43,11 +30,18 @@ class Action extends AbstractEntity
         return $this;
     }
 
+    /**
+     * @return null|string
+     */
     public function getDescription(): ?string
     {
         return $this->description;
     }
 
+    /**
+     * @param null|string $description
+     * @return Action
+     */
     public function setDescription(?string $description): self
     {
         $this->description = $description;
