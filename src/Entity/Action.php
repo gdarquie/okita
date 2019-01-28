@@ -20,32 +20,118 @@ class Action extends AbstractEntity
     private $description;
 
     /**
-     * @param string $title
-     * @return Action
+     * @ORM\ManyToOne(targetEntity="App\Entity\Character")
+     * @ORM\JoinColumn(name="character_id", referencedColumnName="id", nullable=false, onDelete="CASCADE")
      */
-    public function setTitle(string $title): self
-    {
-        $this->title = $title;
+    private $character;
 
-        return $this;
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $start;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $end;
+
+    //???? todo: garder ou enlever?
+    private $result;
+
+    /**
+     * @return mixed
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 
     /**
-     * @return null|string
+     * @param mixed $title
      */
-    public function getDescription(): ?string
+    public function setTitle($title): void
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDescription()
     {
         return $this->description;
     }
 
     /**
-     * @param null|string $description
-     * @return Action
+     * @param mixed $description
      */
-    public function setDescription(?string $description): self
+    public function setDescription($description): void
     {
         $this->description = $description;
-
-        return $this;
     }
+
+    /**
+     * @return mixed
+     */
+    public function getCharacter()
+    {
+        return $this->character;
+    }
+
+    /**
+     * @param mixed $character
+     */
+    public function setCharacter($character): void
+    {
+        $this->character = $character;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param mixed $start
+     */
+    public function setStart($start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * @param mixed $end
+     */
+    public function setEnd($end): void
+    {
+        $this->end = $end;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getResult()
+    {
+        return $this->result;
+    }
+
+    /**
+     * @param mixed $result
+     */
+    public function setResult($result): void
+    {
+        $this->result = $result;
+    }
+
 }

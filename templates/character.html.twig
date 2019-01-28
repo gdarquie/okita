@@ -1,0 +1,17 @@
+{% block body %}
+
+    {% if character.gender == 'F'  %}
+        {% set pronom = 'elle' %}
+        {% set defini = 'la' %}
+        {% set indefini = 'une' %}
+    {% else %}
+        {% set pronom = 'il' %}
+        {% set defini = 'le' %}
+        {% set indefini = 'un' %}
+    {% endif %}
+
+    <h1>{{ character.name }}</h1>
+
+    <p>{{ character.name }} naît le {{ character.birthDate }}, c'est un{% if character.gender == 'F'  %}e femme{% else %} homme{% endif %}. {{ pronom | capitalize }} meurt le {{ character.deathDate }}.</p>
+
+{% endblock %}
