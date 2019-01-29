@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Component\Command;
+namespace App\Command;
 
 use Symfony\Component\Console\Command\Command;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-class generateCharactersCommand extends Command
+class InitiateCommand extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'app:gen:char';
+    protected static $defaultName = 'app:initiate';
 
     private $container;
 
@@ -25,13 +24,11 @@ class generateCharactersCommand extends Command
     {
         $this
             // the short description shown while running "php bin/console list"
-            ->setDescription('Generate characters')
+            ->setDescription('Initialize Okita characters generator')
 
             // the full command description shown when running the command with
             // the "--help" option
-            ->setHelp('This command allows you to generate characters...')
-            ->addArgument('number', InputArgument::OPTIONAL, 'The number of characters to create', 10)
-
+            ->setHelp('This command allows you to set up the project for generating characters...')
         ;
     }
 
@@ -40,17 +37,7 @@ class generateCharactersCommand extends Command
         $em = $this->container->get('doctrine');
         $connection = $em->getConnection();
 
-        $output->writeln([
-            'Characters generator',
-            '============',
-            '',
-        ]);
-
-        $number = $input->getArgument('number');
-
-        $statement = $connection->executeQuery('SELECT generate_characters('.$number.')');
-        $statement->fetchAll();
-
-        $output->writeln($number.' characters successfully generated!');
+        $statement = $connection->executeQuery('SELECT initialize()');
+        $response = $statement->fetchAll();
     }
 }

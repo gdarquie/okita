@@ -28,12 +28,12 @@ class Action extends AbstractEntity
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $start;
+    private $startAt;
 
     /**
      * @ORM\Column(type="integer", nullable=false)
      */
-    private $end;
+    private $endAt;
 
     //???? todo: garder ou enlever?
     private $result;
@@ -89,33 +89,33 @@ class Action extends AbstractEntity
     /**
      * @return mixed
      */
-    public function getStart()
+    public function getStartAt()
     {
-        return $this->start;
+        return $this->startAt;
     }
 
     /**
-     * @param mixed $start
+     * @param mixed $startAt
      */
-    public function setStart($start): void
+    public function setStartAt($startAt): void
     {
-        $this->start = $start;
+        $this->startAt = $startAt;
     }
 
     /**
      * @return mixed
      */
-    public function getEnd()
+    public function getEndAt()
     {
-        return $this->end;
+        return $this->endAt;
     }
 
     /**
-     * @param mixed $end
+     * @param mixed $endAt
      */
-    public function setEnd($end): void
+    public function setEndAt($endAt): void
     {
-        $this->end = $end;
+        $this->endAt = $endAt;
     }
 
     /**

@@ -29,4 +29,17 @@ class CharacterController extends AbstractController
             'character' => $character
         ));
     }
+
+    /**
+     * @Route("/character/{characterId}/day/{day}", name="get_character_actions_by_day")
+     */
+    public function getCharacterActionsByDay($characterId, $day)
+    {
+        $character = $this->getDoctrine()->getRepository(Character::class)->findOneById($characterId);
+        $actions = "";
+        return $this->render('actions.html.twig', array(
+            'character' => $character,
+            'action' => $actions
+        ));
+    }
 }

@@ -1,0 +1,18 @@
+{% block body %}
+
+    {% if character.gender == 'F'  %}
+        {% set pronom = 'elle' %}
+        {% set defini = 'la' %}
+        {% set indefini = 'une' %}
+    {% else %}
+        {% set pronom = 'il' %}
+        {% set defini = 'le' %}
+        {% set indefini = 'un' %}
+    {% endif %}
+
+    <h1>{{ character.name }}</h1>
+    <p><a href='{{ path('get_character', {'id': character.id}) }}'>Voir le personnage</a></p>
+
+    <p>Les actions</p>
+
+{% endblock %}
