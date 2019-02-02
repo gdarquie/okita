@@ -16,9 +16,9 @@
         <p><a href='{{ path('get_character', {'id': character.id}) }}'>Voir le personnage</a></p>
 
         {% for action in actions %}
-            {{ action.title }}
-            {{ action.description }}
-            <p>L'action dure {{ action.startAt }} de à {{ action.endAt }}.</p>
+            <article>
+                <p>{{ action.title |capitalize }} entre {{ action.startAt }} et {{ action.endAt }}.</p>
+            </article>
         {% endfor %}
     </div>
 {% endblock %}
