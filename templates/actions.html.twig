@@ -1,18 +1,24 @@
+{% extends 'base.html.twig' %}
+
 {% block body %}
+    <div class="container">
+        {% if character.gender == 'F'  %}
+            {% set pronom = 'elle' %}
+            {% set defini = 'la' %}
+            {% set indefini = 'une' %}
+        {% else %}
+            {% set pronom = 'il' %}
+            {% set defini = 'le' %}
+            {% set indefini = 'un' %}
+        {% endif %}
 
-    {% if character.gender == 'F'  %}
-        {% set pronom = 'elle' %}
-        {% set defini = 'la' %}
-        {% set indefini = 'une' %}
-    {% else %}
-        {% set pronom = 'il' %}
-        {% set defini = 'le' %}
-        {% set indefini = 'un' %}
-    {% endif %}
+        <h1>Liste des actions de {{ character.name }}</h1>
+        <p><a href='{{ path('get_character', {'id': character.id}) }}'>Voir le personnage</a></p>
 
-    <h1>{{ character.name }}</h1>
-    <p><a href='{{ path('get_character', {'id': character.id}) }}'>Voir le personnage</a></p>
-
-    <p>Les actions</p>
-
+        {% for action in actions %}
+            {{ action.title }}
+            {{ action.description }}
+            <p>L'action dure {{ action.startAt }} de à {{ action.endAt }}.</p>
+        {% endfor %}
+    </div>
 {% endblock %}

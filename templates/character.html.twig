@@ -1,17 +1,17 @@
 {% block body %}
+    <div class="container">
+        {% if character.gender == 'F'  %}
+            {% set pronom = 'elle' %}
+            {% set defini = 'la' %}
+            {% set indefini = 'une' %}
+        {% else %}
+            {% set pronom = 'il' %}
+            {% set defini = 'le' %}
+            {% set indefini = 'un' %}
+        {% endif %}
 
-    {% if character.gender == 'F'  %}
-        {% set pronom = 'elle' %}
-        {% set defini = 'la' %}
-        {% set indefini = 'une' %}
-    {% else %}
-        {% set pronom = 'il' %}
-        {% set defini = 'le' %}
-        {% set indefini = 'un' %}
-    {% endif %}
+        <h1>{{ character.name }}</h1>
 
-    <h1>{{ character.name }}</h1>
-
-    <p>{{ character.name }} naît le jour {{ character.birthDate / 365*24 }}, c'est un{% if character.gender == 'F'  %}e femme{% else %} homme{% endif %}. {{ pronom | capitalize }} meurt au jour {{ ((character.deathDate)/(24*3600) )| round}}.</p>
-
+        <p>{{ character.name }} naît le jour {{ character.birthDate / 365*24 }}, c'est un{% if character.gender == 'F'  %}e femme{% else %} homme{% endif %}. {{ pronom | capitalize }} meurt au jour {{ ((character.deathDate)/(24*3600) )| round}}.</p>
+    </div>
 {% endblock %}

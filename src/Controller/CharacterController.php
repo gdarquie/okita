@@ -9,7 +9,7 @@ use Symfony\Component\Routing\Annotation\Route;
 class CharacterController extends AbstractController
 {
     /**
-     * @Route("/character", name="character")
+     * @Route("/personnage", name="character")
      */
     public function index()
     {
@@ -20,7 +20,7 @@ class CharacterController extends AbstractController
     }
 
     /**
-     * @Route("/character/{id}", name="get_character")
+     * @Route("/personnages/{id}", name="get_character")
      */
     public function getCharacter($id)
     {
@@ -39,7 +39,7 @@ class CharacterController extends AbstractController
         $actions = "";
         return $this->render('actions.html.twig', array(
             'character' => $character,
-            'action' => $actions
+            'actions' => $actions
         ));
     }
 }
