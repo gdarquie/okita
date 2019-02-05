@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+    <div class="container">
+
+        <header>
+            <h1>Données de vérification</h1>
+        </header>
+
+        <section>
+            <h2>Aperçu</h2>
+            <table class="table table-stripped">
+                <tr>
+                    <th>Clé</th>
+                    <th>Valeur</th>
+                </tr>
+                <tr>
+                    <td>Nombre de personnages</td>
+                    <td>{{ charactersCount }}</td>
+                </tr>
+                <tr>
+                    <td>Début de la fiction</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Fin de la fiction</td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td>Plus grand âge au début de la fiction </td>
+                    <td>{{ maxAgeCharacter }} ans</td>
+                </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Exemple aléatoire de personnage</h2>
+
+            <p>...</p>
+        </section>
+    </div>
+{% endblock %}
