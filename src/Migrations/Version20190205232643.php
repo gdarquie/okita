@@ -27,7 +27,10 @@ final class Version20190205232643 extends AbstractMigration
 $$
 BEGIN
   RETURN floor(random() * (high - low + 1) + low);
-END;');
+END;
+$$
+language \'plpgsql\'
+STRICT;');
 
         $this->addSql('CREATE OR REPLACE FUNCTION generate_characters(count integer)
   RETURNS VOID AS
