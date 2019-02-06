@@ -16,7 +16,7 @@
                 </tr>
                 <tr>
                     <td>Nombre de personnages</td>
-                    <td>{{ charactersCount }}</td>
+                    <td>{{ statsCharacter['total'] }}</td>
                 </tr>
                 <tr>
                     <td>Début de la fiction</td>
@@ -28,7 +28,7 @@
                 </tr>
                 <tr>
                     <td>Plus grand âge au début de la fiction </td>
-                    <td>{{ maxAgeCharacter }} ans</td>
+                    <td>{{ statsCharacter['max_age'] }} ans</td>
                 </tr>
             </table>
         </section>
@@ -36,7 +36,22 @@
         <section>
             <h2>Exemple aléatoire de personnage</h2>
 
-            <p>...</p>
+            <table class="table">
+                <tr>
+                    <tr>
+                        <th>Id</th>
+                        <th>Nom</th>
+                        <th>Sexe</th>
+                    </tr>
+                    <tr>
+                        <td>{{ character.id }}</td>
+                        <td>{{ character.name }}</td>
+                        <td>{{ character.sex }}</td>
+                    </tr>
+                </tr>
+                <tr></tr>
+            </table>
+
         </section>
     </div>
 {% endblock %}

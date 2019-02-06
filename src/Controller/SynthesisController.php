@@ -17,33 +17,43 @@ class SynthesisController extends AbstractController
     }
 
     /**
-     * @Route("/synthesis", name="synthesis")
+     * @Route("/", name="synthesis")
      */
     public function index()
     {
+        $stats = $this->getStatsCharacters();
+
         return $this->render('synthesis.html.twig', [
-            'charactersCount' => $this->countCharacter(),
-            'maxAgeCharacter' => $this->maxAgeCharacter(),
+            'character' => $this->getRandomCharacter(rand($stats['min_id'],$stats['max_id'])),
+            'statsCharacter' => $stats,
         ]);
     }
 
     /**
+     * @param $randomId
      * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function countCharacter()
+    private function getRandomCharacter($randomId)
     {
-        $query = $this->em->createQuery('SELECT COUNT(c.id) FROM '.Character::class.' c ');
-        return $query->getSingleScalarResult();
+        $query = $this->em->createQuery('SELECT c FROM '.Character::class.' c WHERE c.id = :id');
+        $query->setParameter('id', $randomId);
+        $character = $query->getSingleResult();
+
+        return $character;
     }
 
     /**
      * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    private function maxAgeCharacter()
+    private function getStatsCharacters()
     {
-        $query = $this->em->createQuery('SELECT MAX((c.deathDate - c.birthDate)/(365*24*3600)) FROM '.Character::class.' c ');
-        return $query->getSingleScalarResult();
+        $query = $this->em->createQuery('SELECT COUNT(c.id) as total,MAX((c.deathDate - c.birthDate)/(365*24*3600)) as max_age, MAX(c.id) as max_id, MIN(c.id) as min_id FROM '.Character::class.' c ');
+        $stats = $query->getSingleResult();
+
+        return $stats;
     }
 }
