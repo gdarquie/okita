@@ -52,7 +52,7 @@
                         <th>Sexe</th>
                     </tr>
                     <tr>
-                        <td>{{ character.id }}</td>
+                        <td><a href="{{ path('get_character', {'id': character.id}) }}">{{ character.id }}</a></td>
                         <td>{{ character.name }}</td>
                         <td>{{ character.sex }}</td>
                     </tr>
