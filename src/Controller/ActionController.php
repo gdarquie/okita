@@ -23,7 +23,8 @@ class ActionController extends AbstractController
     {
         ($day = $request->get('jour')) ? $time = $day*24*60*60 : $time = 0;
         $characterId = $character->getId();
-        $actions = $this->getDoctrine()->getRepository(Action::class)->findByPersonnage($characterId, $time);
+//        $actions = $this->getDoctrine()->getRepository(Action::class)->findByPersonnage($characterId, $time);
+        $actions = $this->getDoctrine()->getRepository(Action::class)->findByCharacter($characterId, $time);
 
         return $this->render('actions.html.twig', array(
             'character' => $character,
