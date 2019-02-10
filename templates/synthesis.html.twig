@@ -28,7 +28,11 @@
                 </tr>
                 <tr>
                     <td>Plus grand âge au début de la fiction </td>
-                    <td>{{ statsCharacter['max_age'] }} ans</td>
+                    <td>{{ statsCharacter['max_age'] }} an(s)</td>
+                </tr>
+                <tr>
+                    <td>Plus petit âge au début de la fiction </td>
+                    <td>{{ statsCharacter['min_age'] }} an(s)</td>
                 </tr>
                 <tr>
                     <td>Nombre de femmes</td>
@@ -38,6 +42,22 @@
                     <td>Nombre d'hommes</td>
                     <td>{{ ratioSex['male'] }}</td>
                 </tr>
+            </table>
+        </section>
+
+        <section>
+            <h2>Répartitions par tranche d'âge</h2>
+
+            <p>Le nombre de personnages par âge au début de l'histoire.</p>
+
+            <table class="table table-striped">
+                {% for ages in ageByDecade %}
+                    {% for key, value in ages %}
+                        <ul>
+                            <li>{{ key }} personnages ont entre {{ (value/ (3600*365*24)) - 10 }} et {{ value / (3600*365*24) }} ans</li>
+                        </ul>
+                    {% endfor %}
+                {% endfor %}
             </table>
         </section>
 

@@ -6,6 +6,8 @@ use App\Entity\Action;
 use App\Entity\Character;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\ORM\Query\ResultSetMappingBuilder;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -22,6 +24,17 @@ class ActionRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Action::class);
         $this->em = $em;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getAgeByDecade()
+    {
+        $rsm = new ResultSetMappingBuilder($this->em);
+
+        $query = $this->em->createNativeQuery('SELECT get_birthdate_by_decades(-100, 0)', $rsm);
+        return $query->getResult();
     }
 
     /**

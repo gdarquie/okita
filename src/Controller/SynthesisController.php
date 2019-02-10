@@ -10,8 +10,15 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class SynthesisController extends AbstractController
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
 
+    /**
+     * SynthesisController constructor.
+     * @param EntityManagerInterface $em
+     */
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
@@ -27,7 +34,8 @@ class SynthesisController extends AbstractController
         return $this->render('synthesis.html.twig', [
             'character' => $this->getRandomCharacter(rand($stats['min_id'],$stats['max_id'])),
             'statsCharacter' => $stats,
-            'ratioSex' => $this->getRatioSex()
+            'ratioSex' => $this->getRatioSex(),
+            'ageByDecade' => $this->getAgeByDecade(),
         ]);
     }
 
@@ -53,10 +61,31 @@ class SynthesisController extends AbstractController
      */
     private function getStatsCharacters()
     {
-        $query = $this->em->createQuery('SELECT COUNT(c.id) as total,MAX((c.deathDate - c.birthDate)/(365*24*3600)) as max_age, MAX(c.id) as max_id, MIN(c.id) as min_id FROM '.Character::class.' c ');
+        $query = $this->em->createQuery('SELECT COUNT(c.id) as total, MAX((c.deathDate - c.birthDate)/(365*24*3600)) as max_age, MIN((c.deathDate - c.birthDate)/(365*24*3600)) as min_age, MAX(c.id) as max_id, MIN(c.id) as min_id FROM '.Character::class.' c ');
         $stats = $query->getSingleResult();
         
         return $stats;
+    }
+
+    /**
+     * @return mixed[]
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    public function getAgeByDecade()
+    {
+        $sql = "SELECT array_to_json(get_birthdate_by_decades(-100, 0))";
+        $stmt = $this->em->getConnection()->prepare($sql);
+        $stmt->execute();
+        $results = $stmt->fetchAll();
+
+        $inputResults = json_decode($results[0]['array_to_json']);
+        $outputResults = [];
+
+        foreach ($inputResults as $result) {
+            array_push($outputResults, json_decode($result, true));
+        }
+
+        return $outputResults;
     }
 
     /**
