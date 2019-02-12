@@ -26,12 +26,12 @@ class Action extends AbstractEntity
     private $character;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="bigint", nullable=false)
      */
     private $startAt;
 
     /**
-     * @ORM\Column(type="integer", nullable=false)
+     * @ORM\Column(type="bigint", nullable=false)
      */
     private $endAt;
 
