@@ -22,6 +22,7 @@ class ActionController extends AbstractController
     public function getActions(Request $request, Character $character)
     {
         ($day = $request->get('jour')) ? $time = $day*24*60*60 : $time = 0;
+
         $characterId = $character->getId();
         $actions = $this->getDoctrine()->getRepository(Action::class)->findByCharacter($characterId, $time);
 

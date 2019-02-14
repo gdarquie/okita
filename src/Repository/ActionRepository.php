@@ -45,10 +45,11 @@ class ActionRepository extends ServiceEntityRepository
     public function findByCharacter($characterId, $day)
     {
         $query = $this->em->createQuery(
-            'SELECT a FROM '.Action::class.' a WHERE a.character = :characterId AND a.startAt >= :time  AND a.endAt <= :time+(3600*24)
+            'SELECT a FROM '.Action::class.' a WHERE a.character = :characterId AND a.startAt >= :begin  AND a.endAt <= :end
         ORDER BY a.startAt ASC');
         $query->setParameter('characterId', $characterId);
-        $query->setParameter('time', $day*3600*24);
+        $query->setParameter('begin', $day*3600*24);
+        $query->setParameter('end', $day*3600*24+(3600*24));
 
         return $query->getResult();
     }
