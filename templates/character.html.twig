@@ -14,7 +14,7 @@
 
         <h1>{{ character.name }}</h1>
 
-        <p>{{ character.name }} naît le jour {{ character.birthDate / 365*24 }}, c'est un{% if character.gender == 'F'  %}e femme{% else %} homme{% endif %}. {{ pronom | capitalize }} meurt au jour {{ ((character.deathDate)/(24*3600) )| round}}.</p>
+        <p>{{ character.name }} naît le jour {{ ((character.birthDate) / (24*3600)) }}, c'est un{% if character.gender == 'F'  %}e femme{% else %} homme{% endif %}. {{ pronom | capitalize }} meurt au jour {{ ((character.deathDate)/(24*3600) )| round}}.</p>
 
         <p><a href="{{ path('get_actions',  {'id' : character.id }) }}">Voir les actions du personnage</a></p>
 
