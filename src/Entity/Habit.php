@@ -5,9 +5,9 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\RoutineActionRepository")
+ * @ORM\Entity(repositoryClass="App\Repository\HabitRepository")
  */
-class RoutineAction extends AbstractEntity
+class Habit extends AbstractEntity
 {
     /**
      * @ORM\Column(type="bigint", nullable=false)

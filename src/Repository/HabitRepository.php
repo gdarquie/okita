@@ -2,21 +2,21 @@
 
 namespace App\Repository;
 
-use App\Entity\RoutineAction;
+use App\Entity\Habit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
- * @method RoutineAction|null find($id, $lockMode = null, $lockVersion = null)
- * @method RoutineAction|null findOneBy(array $criteria, array $orderBy = null)
- * @method RoutineAction[]    findAll()
- * @method RoutineAction[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Habit|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Habit|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Habit[]    findAll()
+ * @method Habit[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RoutineActionRepository extends ServiceEntityRepository
+class HabitRepository extends ServiceEntityRepository
 {
     public function __construct(RegistryInterface $registry)
     {
-        parent::__construct($registry, RoutineAction::class);
+        parent::__construct($registry, Habit::class);
     }
 
     // /**

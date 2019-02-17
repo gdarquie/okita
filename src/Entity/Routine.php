@@ -15,7 +15,7 @@ class Routine extends AbstractEntity
     private $name;
 
     /**
-     * @ORM\OneToMany(targetEntity="App\Entity\RoutineAction", mappedBy="routine")
+     * @ORM\OneToMany(targetEntity="Habit", mappedBy="routine")
      */
     private $routinesActions;
 
