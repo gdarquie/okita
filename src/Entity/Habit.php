@@ -9,6 +9,9 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Habit extends AbstractEntity
 {
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
     private $name;
 
     /**
