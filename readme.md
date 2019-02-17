@@ -1,8 +1,8 @@
-#Okita
+# Okita
 
-Character & routines generator
+Characters & routines generator
 
-##Installation
+## Installation
 
 ```
 composer install
