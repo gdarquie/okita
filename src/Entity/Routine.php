@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 class Routine extends AbstractEntity
 {
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=255, unique=true)
      */
     private $name;
 

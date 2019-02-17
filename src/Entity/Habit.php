@@ -9,10 +9,17 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Habit extends AbstractEntity
 {
+    private $name;
+
     /**
-     * @ORM\Column(type="bigint", nullable=false)
+     * @ORM\Column(type="integer", nullable=false)
      */
-    private $duration;
+    private $start;
+
+    /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $end;
 
     /**
      * @ORM\ManyToOne(targetEntity="App\Entity\Routine", inversedBy="routinesActions")
@@ -22,17 +29,49 @@ class Habit extends AbstractEntity
     /**
      * @return mixed
      */
-    public function getDuration()
+    public function getName()
     {
-        return $this->duration;
+        return $this->name;
     }
 
     /**
-     * @param mixed $duration
+     * @param mixed $name
      */
-    public function setDuration($duration): void
+    public function setName($name): void
     {
-        $this->duration = $duration;
+        $this->name = $name;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getStart()
+    {
+        return $this->start;
+    }
+
+    /**
+     * @param mixed $start
+     */
+    public function setStart($start): void
+    {
+        $this->start = $start;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getEnd()
+    {
+        return $this->end;
+    }
+
+    /**
+     * @param mixed $end
+     */
+    public function setEnd($end): void
+    {
+        $this->end = $end;
     }
 
     /**

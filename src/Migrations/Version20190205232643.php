@@ -265,7 +265,20 @@ LANGUAGE plpgsql;');
     RETURN var_result;
   END
   $$ LANGUAGE plpgsql;');
+
+        // ---------------------------
+        //--------- Routines ---------
+        // ---------------------------
+        $this->addSql('CREATE OR REPLACE FUNCTION create_routine(v_name VARCHAR(255))
+    RETURNS VOID AS $$
+    BEGIN
+        INSERT INTO routine (name, created_at, updated_at, uuid) VALUES (v_name, NOW(), NOW(), uuid_generate_v4());
+    END
+    $$ LANGUAGE plpgsql;
+        ');
+
     }
+
 
     public function down(Schema $schema) : void
     {
