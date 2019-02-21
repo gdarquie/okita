@@ -20,6 +20,11 @@ class Routine extends AbstractEntity
     private $routinesActions;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Character", mappedBy="routines")
+     */
+    private $characters;
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -51,5 +56,20 @@ class Routine extends AbstractEntity
         $this->routinesActions = $routinesActions;
     }
 
+    /**
+     * @return mixed
+     */
+    public function getCharacters()
+    {
+        return $this->characters;
+    }
+
+    /**
+     * @param mixed $characters
+     */
+    public function setCharacters($characters): void
+    {
+        $this->characters = $characters;
+    }
 
 }

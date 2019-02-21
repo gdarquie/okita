@@ -40,6 +40,11 @@ class Character extends AbstractEntity
     private $deathDate;
 
     /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Routine", inversedBy="characters")
+     */
+    private $routines;
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -133,5 +138,21 @@ class Character extends AbstractEntity
     public function setDeathDate($deathDate): void
     {
         $this->deathDate = $deathDate;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getRoutines()
+    {
+        return $this->routines;
+    }
+
+    /**
+     * @param mixed $routines
+     */
+    public function setRoutines($routines): void
+    {
+        $this->routines = $routines;
     }
 }
