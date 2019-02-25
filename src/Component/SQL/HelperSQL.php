@@ -1,12 +1,6 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: gaotian
- * Date: 2019-02-25
- * Time: 00:49
- */
 
-namespace App\SQL\Character;
+namespace App\Component\SQL;
 
 
 class HelperSQL

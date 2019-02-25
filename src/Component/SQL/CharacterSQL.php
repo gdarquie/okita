@@ -1,9 +1,6 @@
 <?php
 
-namespace App\SQL\Character;
-
-
-use Twig\Node\Expression\Test\OddTest;
+namespace App\Component\SQL;
 
 class CharacterSQL
 {

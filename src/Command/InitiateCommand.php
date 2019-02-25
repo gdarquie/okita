@@ -2,6 +2,8 @@
 
 namespace App\Command;
 
+use App\Service\SQLService;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -13,11 +15,13 @@ class InitiateCommand extends Command
     protected static $defaultName = 'app:initiate';
 
     private $container;
+    private $em;
 
-    public function __construct($name = null, ContainerInterface $container)
+    public function __construct($name = null, ContainerInterface $container, EntityManagerInterface $em)
     {
         parent::__construct($name);
         $this->container = $container;
+        $this->em = $em;
     }
 
     protected function configure()
@@ -34,10 +38,8 @@ class InitiateCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->container->get('doctrine');
-        $connection = $em->getConnection();
+        $sqlService = new SQLService($this->em);
+        $sqlService->initialize();
 
-        $statement = $connection->executeQuery('SELECT initialize()');
-        $response = $statement->fetchAll();
     }
 }

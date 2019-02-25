@@ -1,6 +1,6 @@
 <?php
 
-namespace App\SQL\Character;
+namespace App\Component\SQL;
 
 
 class ActionSQL
