@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -14,11 +15,15 @@ class GenerateCharactersCommand extends Command
     protected static $defaultName = 'app:gen:char';
 
     private $container;
+    private $em;
+    private $connection;
 
-    public function __construct($name = null, ContainerInterface $container)
+    public function __construct($name = null, ContainerInterface $container, EntityManagerInterface $em)
     {
         parent::__construct($name);
         $this->container = $container;
+        $this->em = $em;
+        $this->connection = $this->em->getConnection();
     }
 
     protected function configure()
@@ -33,9 +38,6 @@ class GenerateCharactersCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $em = $this->container->get('doctrine');
-        $connection = $em->getConnection();
-
         $output->writeln([
             'Characters generator',
             '============',
@@ -44,7 +46,7 @@ class GenerateCharactersCommand extends Command
 
         $number = $input->getArgument('number');
 
-        $statement = $connection->executeQuery('SELECT generate_characters('.$number.')');
+        $statement = $this->connection->executeQuery('SELECT generate_characters('.$number.')');
         $statement->fetchAll();
 
         $output->writeln($number.' characters successfully generated!');

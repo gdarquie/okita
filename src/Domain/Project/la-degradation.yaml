@@ -1,0 +1,9 @@
+name: "la-degradation"
+
+routines:
+  - "default1" : ""
+  - "default2": ""
+
+characters:
+  total : 10000
+
