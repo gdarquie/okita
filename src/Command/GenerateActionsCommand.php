@@ -2,14 +2,14 @@
 
 namespace App\Command;
 
-use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
+use Symfony\Component\Yaml\Yaml;
 
-class GenerateActionsCommand extends Command
+class GenerateActionsCommand extends AbstractSQLCommand
 {
     protected static $defaultName = 'app:gen:act';
 
@@ -24,6 +24,27 @@ class GenerateActionsCommand extends Command
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $rootPath = $this->container->get('kernel')->getProjectDir();
+        $projectPath = $rootPath.'/src/Domain/Project';
+        $projectFile = $projectPath.'/la-degradation.yaml';
+
+        $value = Yaml::parseFile($projectFile);
+
+        $totalCharacters = $value['characters']['total'];
+
+        $command = $this->getApplication()->find('demo:greet');
+
+        $arguments = [
+            'command' => 'demo:greet',
+            'name'    => 'Fabien',
+            '--yell'  => true,
+        ];
+
+        $greetInput = new ArrayInput($arguments);
+        $returnCode = $command->run($greetInput, $output);
+
+        dd($value['characters']['total']);
+
         $io = new SymfonyStyle($input, $output);
         $arg1 = $input->getArgument('arg1');
 
