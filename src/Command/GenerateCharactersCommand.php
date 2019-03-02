@@ -12,7 +12,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
 class GenerateCharactersCommand extends Command
 {
     // the name of the command (the part after "bin/console")
-    protected static $defaultName = 'app:gen:char';
+    protected static $defaultName = 'app:generate:characters';
 
     private $container;
     private $em;

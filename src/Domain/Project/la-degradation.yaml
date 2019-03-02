@@ -1,8 +1,12 @@
 name: "la-degradation"
 
 routines:
-  - "default 3": '{ {"dormir","18000","36000"} , {"agir","36001","54000"}, {"dormir","54001","62000"} }'
-  - "default 4": '{ {"dormir","18000","36000"} , {"agir","36001","54000"}, {"dormir","54001","62000"} }'
+  - "default 15": '{ {"dormir","18000","36000"} , {"agir","36001","54000"}, {"dormir","54001","62000"} }'
+  - "default 16": '{ {"dormir","18000","36000"} , {"agir","36001","54000"}, {"dormir","54001","62000"} }'
 
 characters:
-  total : 10000
+  total : 100000
+
+fiction:
+  start: 0
+  end: 3

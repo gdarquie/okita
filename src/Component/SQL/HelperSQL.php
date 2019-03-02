@@ -5,6 +5,9 @@ namespace App\Component\SQL;
 
 class HelperSQL
 {
+    /**
+     * @return string
+     */
     public function getRandomBetween()
     {
         $sql = <<<EOT

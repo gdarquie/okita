@@ -77,6 +77,13 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
         //generate characters
         $generateCharactersCommand = $this->getApplication()->find('app:generate:characters');
+        $arguments = [
+            'command' => 'app:build-routines',
+            'number'    => $totalCharacters
+        ];
+
+        $generateCharactersCommandInput = new ArrayInput($arguments);
+        $generateCharactersCommand->run($generateCharactersCommandInput, $output);
 
         //generate actions? Another command?
     }
