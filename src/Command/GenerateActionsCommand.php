@@ -11,7 +11,7 @@ use Symfony\Component\Yaml\Yaml;
 
 class GenerateActionsCommand extends AbstractSQLCommand
 {
-    protected static $defaultName = 'app:gen:act';
+    protected static $defaultName = 'app:generation:actions';
 
     protected function configure()
     {

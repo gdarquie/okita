@@ -5,6 +5,8 @@ namespace App\Component\SQL;
 
 class ActionSQL
 {
+    //todo : à remplacer par les fonctions de routines
+
     /**
      * @return string
      */
