@@ -179,11 +179,22 @@ class CharacterSQL
           DECLARE
             counter integer := 0;
             dates bigint ARRAY[2];
+            character_id integer;
+            routine_id integer;
           BEGIN
             WHILE counter < count
               LOOP
+                -- insert a character
                 dates := (SELECT define_dates());
                 INSERT INTO character (name, sex, gender, birth_date, death_date, uuid, created_at, updated_at) VALUES (generate_name(), define_sex(), define_gender(), dates[1], dates[2], uuid_generate_v4(),NOW(), NOW());
+        
+                -- insert relation with routine
+                character_id := (SELECT id FROM character ORDER BY id DESC LIMIT 1);
+                -- todo : find another way to select randomly a row
+                routine_id := (SELECT id FROM routine TABLESAMPLE SYSTEM(100) LIMIT 1);
+                INSERT INTO character_routine (character_id, routine_id)
+                  VALUES (character_id, routine_id);
+        
                 counter := counter + 1;
               END LOOP;
           END;
