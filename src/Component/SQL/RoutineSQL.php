@@ -33,8 +33,6 @@ class RoutineSQL
                 v_count :=1;
                 v_length := (SELECT array_length(v_habits, 1));
             
-                RAISE NOTICE '%', v_routine.id;
-            
                 -- create habits
                  WHILE v_count <= v_length LOOP
                    PERFORM * FROM create_habit(v_routine.id, (v_habits[v_count][1]::VARCHAR(255)), (v_habits[v_count][2]::int), (v_habits[v_count][3]::int));
