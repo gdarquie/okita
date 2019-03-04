@@ -46,8 +46,8 @@ class ActionRepository extends ServiceEntityRepository
             'SELECT a FROM '.Action::class.' a WHERE a.character = :characterId AND a.startAt >= :begin  AND a.endAt <= :end
         ORDER BY a.startAt ASC');
         $query->setParameter('characterId', $characterId);
-        $query->setParameter('begin', $day*3600*24);
-        $query->setParameter('end', $day*3600*24+(3600*24));
+        $query->setParameter('begin', $day);
+        $query->setParameter('end', $day+(3600*24));
 
         return $query->getResult();
     }

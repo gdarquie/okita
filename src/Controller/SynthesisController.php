@@ -2,7 +2,9 @@
 
 namespace App\Controller;
 
+use App\Entity\Action;
 use App\Entity\Character;
+use App\Entity\Habit;
 use App\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -29,11 +31,15 @@ class SynthesisController extends AbstractController
      */
     public function index()
     {
-        $stats = $this->getStatsCharacters();
+        $statsCharacter = $this->getStatsCharacters();
+        $statsAction = $this->getStatsAction();
+        $statsHabit = $this->getStatsHabit();
 
         return $this->render('synthesis.html.twig', [
-            'character' => $this->getRandomCharacter(rand($stats['min_id'],$stats['max_id'])),
-            'statsCharacter' => $stats,
+            'character' => $this->getRandomCharacter(rand($statsCharacter['min_id'],$statsCharacter['max_id'])),
+            'statsCharacter' => $statsCharacter,
+            'statsAction' => $statsAction,
+            'statsHabit' => $statsHabit,
             'ratioSex' => $this->getRatioSex(),
             'ageByDecade' => $this->getAgeByDecade(),
         ]);
@@ -64,6 +70,36 @@ class SynthesisController extends AbstractController
         $query = $this->em->createQuery('SELECT COUNT(c.id) as total, MAX((c.deathDate - c.birthDate)/(365*24*3600)) as max_age, MIN((c.deathDate - c.birthDate)/(365*24*3600)) as min_age, MAX(c.id) as max_id, MIN(c.id) as min_id FROM '.Character::class.' c ');
         $stats = $query->getSingleResult();
         
+        return $stats;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getStatsAction()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(a.id) as total FROM '.Action::class.' a'
+        );
+        $stats = $query->getSingleResult();
+
+        return $stats;
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    private function getStatsHabit()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(h.id) as total FROM '.Habit::class.' h'
+        );
+        $stats = $query->getSingleResult();
+
         return $stats;
     }
 
