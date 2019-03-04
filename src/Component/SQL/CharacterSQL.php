@@ -200,7 +200,7 @@ class CharacterSQL
                 random_number := (SELECT random_between(1, nb_routines));
                 routine_id := (SELECT routines_id[random_number]);
         
-                -- create routine
+                -- link routine to character
                 INSERT INTO character_routine (character_id, routine_id)
                   VALUES (character_id, routine_id);
         

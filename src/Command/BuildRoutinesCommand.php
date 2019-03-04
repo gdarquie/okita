@@ -16,9 +16,6 @@ class BuildRoutinesCommand extends AbstractSQLCommand
 
     protected function configure()
     {
-
-        // ajouter les paramètres pour pouvoir créer les routines + ensuite créer un scénario qui génère des routines directement
-        // scenario1 : création de 10 routines et génération de personnages avec ces routines
         $this
             ->setDescription('Command for creating routines')
             ->addArgument('name', InputArgument::OPTIONAL, 'Routine name')
