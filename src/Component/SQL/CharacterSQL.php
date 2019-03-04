@@ -177,10 +177,13 @@ class CharacterSQL
           RETURNS VOID AS
           $$
           DECLARE
-            counter integer := 0;
-            dates bigint ARRAY[2];
-            character_id integer;
-            routine_id integer;
+            counter INTEGER := 0;
+            dates BIGINT ARRAY[2];
+            character_id INTEGER;
+            routines_id INTEGER[];
+            nb_routines INTEGER;
+            random_number INTEGER;
+            routine_id INTEGER;
           BEGIN
             WHILE counter < count
               LOOP
@@ -190,8 +193,14 @@ class CharacterSQL
         
                 -- insert relation with routine
                 character_id := (SELECT id FROM character ORDER BY id DESC LIMIT 1);
-                -- todo : find another way to select randomly a row
-                routine_id := (SELECT id FROM routine TABLESAMPLE SYSTEM(100) LIMIT 1);
+        
+                -- select random routine
+                routines_id := (SELECT array_agg(id) FROM routine);
+                nb_routines := (SELECT array_length(routines_id, 1));
+                random_number := (SELECT random_between(1, nb_routines));
+                routine_id := (SELECT routines_id[random_number]);
+        
+                -- create routine
                 INSERT INTO character_routine (character_id, routine_id)
                   VALUES (character_id, routine_id);
         
