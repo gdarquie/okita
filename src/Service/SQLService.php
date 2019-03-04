@@ -63,7 +63,9 @@ class SQLService
     {
         $this->createSQLFunction('action', array(
             'getInsertAction',
-            'getGenerateAction'
+            'getGenerateActionForDay',
+            'generate_actions_for_day_and_character',
+            'generateActionFromDayToDay'
         ));
 
         return true;

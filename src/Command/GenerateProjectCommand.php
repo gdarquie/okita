@@ -4,9 +4,7 @@ namespace App\Command;
 
 use App\Service\SQLService;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use Symfony\Component\Yaml\Yaml;
@@ -18,9 +16,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
     protected function configure()
     {
         $this
-            ->setDescription('Add a short description for your command')
-            ->addArgument('arg1', InputArgument::OPTIONAL, 'Argument description')
-            ->addOption('option1', null, InputOption::VALUE_NONE, 'Option description')
+            ->setDescription('Generate a new project')
         ;
     }
 
@@ -84,7 +80,5 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
         $generateCharactersCommandInput = new ArrayInput($arguments);
         $generateCharactersCommand->run($generateCharactersCommandInput, $output);
-
-        //generate actions? Another command?
     }
 }
