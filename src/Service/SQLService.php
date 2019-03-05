@@ -25,6 +25,7 @@ class SQLService
         $this->initializeCharacter();
         $this->initializeAction();
         $this->initializeRoutine();
+        $this->initalizeClean();
 
         return true;
     }
@@ -59,6 +60,10 @@ class SQLService
         return true;
     }
 
+    /**
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
     private function initializeAction():bool
     {
         $this->createSQLFunction('action', array(
@@ -71,11 +76,28 @@ class SQLService
         return true;
     }
 
+    /**
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
     private function initializeRoutine():bool
     {
         $this->createSQLFunction('routine', array(
             'getBuildRoutine',
             'getCreateHabit'
+        ));
+
+        return true;
+    }
+
+    /**
+     * @return bool
+     * @throws \Doctrine\DBAL\DBALException
+     */
+    private function initalizeClean():bool
+    {
+        $this->createSQLFunction('clean', array(
+            'getClean'
         ));
 
         return true;
