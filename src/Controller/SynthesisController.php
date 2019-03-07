@@ -6,6 +6,7 @@ use App\Entity\Action;
 use App\Entity\Character;
 use App\Entity\Habit;
 use App\Entity\Setting;
+use App\Service\RoutineGeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -31,6 +32,12 @@ class SynthesisController extends AbstractController
      */
     public function index()
     {
+//        $routineGeneratorSevice = new RoutineGeneratorService($this->em);
+//        $routine = $routineGeneratorSevice->createRoutine();
+//
+//        dd($routine);
+
+
         $statsCharacter = $this->getStatsCharacters();
         $statsAction = $this->getStatsAction();
         $statsHabit = $this->getStatsHabit();

@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Routine;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -14,37 +15,20 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class RoutineRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    private $em;
+
+    public function __construct(RegistryInterface $registry, EntityManagerInterface $em)
     {
         parent::__construct($registry, Routine::class);
+        $this->em = $em;
     }
 
-    // /**
-    //  * @return Routine[] Returns an array of Routine objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    public function findDefaultRoutines()
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $query = $this->em->createQuery(
+            'SELECT r FROM '.Routine::class.' r WHERE r.name LIKE :default');
+        $query->setParameter('default', '%default%');
 
-    /*
-    public function findOneBySomeField($value): ?Routine
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $query->getResult();
     }
-    */
 }
