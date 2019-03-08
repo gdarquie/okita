@@ -23,12 +23,25 @@ class RoutineRepository extends ServiceEntityRepository
         $this->em = $em;
     }
 
+    /**
+     * @return mixed
+     */
     public function findDefaultRoutines()
     {
         $query = $this->em->createQuery(
-            'SELECT r FROM '.Routine::class.' r WHERE r.name LIKE :default');
+            'SELECT r FROM '.Routine::class.' r WHERE r.name LIKE :default ORDER BY r.updatedAt DESC');
         $query->setParameter('default', '%default%');
 
         return $query->getResult();
+    }
+
+    public function findLastRoutineId()
+    {
+        $query = $this->em->createQuery(
+            'SELECT r.id FROM '.Routine::class.' r WHERE r.name LIKE :default ORDER BY r.id DESC');
+        $query->setParameter('default', '%default%');
+        $query->setMaxResults(1);
+
+        return $query->getSingleScalarResult();
     }
 }

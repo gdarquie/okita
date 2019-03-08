@@ -24,10 +24,12 @@ class RoutineGeneratorService
         if(!$actionsList) {
             $actionsList = $this->getActionsTypeList();
         }
-        $existingDefaultRoutines = $this->em->getRepository(Routine::class)->findDefaultRoutines();
 
-        $routineName = 'default 15'; // select all default routine, add 1
-        $routineActions = '{ {"'.$actionsList[0].'","18000","36000"} , {"'.$actionsList[1].'","36001","54000"}, {"'.$actionsList[2].'","54001","62000"}}';
+        //generateName
+        $routineName = $this->generateRoutineName();
+
+        //genereteActions
+        $routineActions = [ 0 => [ $actionsList[0], "18000","36000"], 1 => [$actionsList[1], "36001","54000"], 2 => [$actionsList[2],"54001","62000"]];
         $routine = [ $routineName, $routineActions];
 
         return $routine;
@@ -41,6 +43,14 @@ class RoutineGeneratorService
         $actionsTypeList = ['dormir', 'manger', 'marcher', 'rencontrer', 'travailler', 'rencontrer'];
         return $actionsTypeList;
 
+    }
+
+    /**
+     * @return string
+     */
+    public function generateRoutineName()
+    {
+        return 'default-'.($this->em->getRepository(Routine::class)->findLastRoutineId()+1);
     }
 
     /**
