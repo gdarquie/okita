@@ -32,10 +32,10 @@ class SynthesisController extends AbstractController
      */
     public function index()
     {
-        $routineGeneratorSevice = new RoutineGeneratorService($this->em);
-        $routine = $routineGeneratorSevice->createRoutine();
-
-        dd($routine);
+//        $routineGeneratorSevice = new RoutineGeneratorService($this->em);
+//        $routine = $routineGeneratorSevice->createRoutine();
+//
+//        dd($routine);
 
 
         $statsCharacter = $this->getStatsCharacters();
