@@ -5,6 +5,7 @@ namespace App\Command;
 use App\Service\RoutineGeneratorService;
 use App\Service\SQLService;
 use Symfony\Component\Console\Input\ArrayInput;
+use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -18,6 +19,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
     {
         $this
             ->setDescription('Generate a new project')
+            ->addArgument('project', InputArgument::OPTIONAL, 'Project slug you want to create')
         ;
     }
 
@@ -32,9 +34,10 @@ class GenerateProjectCommand extends AbstractSQLCommand
         ]);
 
         // Set project path
+        $project = $input->getArgument('project');
         $rootPath = $this->container->get('kernel')->getProjectDir();
         $projectPath = $rootPath.'/src/Domain/Project';
-        $projectFile = $projectPath.'/la-degradation.yaml';
+        $projectFile = $projectPath.'/'.$project.'.yaml';
 
         // Parse project config
         $value = Yaml::parseFile($projectFile);

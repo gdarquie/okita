@@ -17,13 +17,15 @@ class GenerationCleanCommand extends AbstractSQLCommand
     {
         $this
             ->setDescription('Clean generation')
+            ->addArgument('project', InputArgument::OPTIONAL, 'Project slug you want to clean')
+
         ;
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $io = new SymfonyStyle($input, $output);
-
+        $project = $input->getArgument('project');
         $statement = $this->connection->executeQuery('SELECT clean()');
         $statement->fetchAll();
 
