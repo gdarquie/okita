@@ -2,6 +2,7 @@
 
 namespace App\Command;
 
+use App\Service\RoutineGeneratorService;
 use App\Service\SQLService;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
@@ -38,11 +39,10 @@ class GenerateProjectCommand extends AbstractSQLCommand
         // Parse project config
         $value = Yaml::parseFile($projectFile);
         $totalCharacters = $value['characters']['total'];
-        $routines = $value['routines'];
+
+        // Get all routines
+        $routines = $this->collectRoutines($value['routines']);
         $io->success('Project pathes and config setted!');
-
-
-        // Launch commands
 
         // Initialization
         $output->writeln([
@@ -55,14 +55,12 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
 
         // Create Routines
-        $buildRoutinesCommand = $this->getApplication()->find('app:build-routines');
+        $buildRoutinesCommand = $this->getApplication()->find('app:build:routine');
 
-        foreach ($routines as $routine) {
-            $key = (array_keys($routine))[0];
-            $value = $routine[$key];
+        foreach ($routines as $key => $value) {
 
             $arguments = [
-                'command' => 'app:build-routines',
+                'command' => 'app:build:routine',
                 'name'    => $key,
                 'content'  => $value,
             ];
@@ -74,11 +72,41 @@ class GenerateProjectCommand extends AbstractSQLCommand
         //generate characters
         $generateCharactersCommand = $this->getApplication()->find('app:generate:characters');
         $arguments = [
-            'command' => 'app:build-routines',
+            'command' => 'app:build:routine',
             'number'    => $totalCharacters
         ];
 
         $generateCharactersCommandInput = new ArrayInput($arguments);
         $generateCharactersCommand->run($generateCharactersCommandInput, $output);
+    }
+
+    /**
+     * get routines from conf and from db
+     *
+     * @param $confRoutines
+     * @return mixed
+     */
+    public function collectRoutines($confRoutines)
+    {
+        $routines = [];
+
+        // get custom routines from conf
+        $customRoutines = $confRoutines['custom'];
+
+        foreach ($customRoutines as $name => $routine) {
+            $routineName = (array_keys($routine))[0];
+            $routineAction = $routine[$routineName];
+            $routines[$routineName] = $routineAction;
+        }
+
+        // get default routines
+        $routineGeneratorService = new RoutineGeneratorService($this->em);
+        $defaultRoutines = $routineGeneratorService->createRoutines($confRoutines['default']['total']);
+
+        foreach ($defaultRoutines as $name => $routine){
+            $routines[$name] = $routine;
+        }
+
+        return $routines;
     }
 }

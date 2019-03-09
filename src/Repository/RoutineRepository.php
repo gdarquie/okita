@@ -42,6 +42,6 @@ class RoutineRepository extends ServiceEntityRepository
         $query->setParameter('default', '%default%');
         $query->setMaxResults(1);
 
-        return $query->getSingleScalarResult();
+        return $query->getOneOrNullResult();
     }
 }

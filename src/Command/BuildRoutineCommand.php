@@ -10,14 +10,14 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
 
-class BuildRoutinesCommand extends AbstractSQLCommand
+class BuildRoutineCommand extends AbstractSQLCommand
 {
-    protected static $defaultName = 'app:build-routines';
+    protected static $defaultName = 'app:build:routine';
 
     protected function configure()
     {
         $this
-            ->setDescription('Command for creating routines')
+            ->setDescription('Command for creating routine')
             ->addArgument('name', InputArgument::OPTIONAL, 'Routine name')
             ->addArgument('content', InputArgument::OPTIONAL, 'Content of the routine')
         ;

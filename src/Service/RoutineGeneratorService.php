@@ -8,19 +8,37 @@ use Doctrine\ORM\EntityManagerInterface;
 class RoutineGeneratorService
 {
     private $em;
-    private $connection;
+    private $lastRoutineId;
 
     public function __construct(EntityManagerInterface $em)
     {
         $this->em = $em;
-        $this->connection = $this->em->getConnection();;
     }
 
+    /**
+     * @param $nbRoutines
+     * @return array
+     */
+    public function createRoutines($nbRoutines) :array
+    {
+        $routines = [];
+
+        for($i = 0; $i < $nbRoutines; $i++) {
+            $routine = $this->createRoutine();
+            $routineName = (array_keys($routine))[0];
+            $routineAction = $routine[$routineName];
+            $routines[$routineName] = $routineAction;
+        }
+
+        return $routines;
+    }
+    
     /**
      * @return array
      */
     public function createRoutine($actionsListRaw = [], $params = [])
     {
+
         if(!$actionsListRaw) {
             $actionsListRaw = $this->getActionsTypeList();
         }
@@ -31,38 +49,26 @@ class RoutineGeneratorService
         // select actions
         $actionsList = $this->selectAction($actionsListRaw);
 
-        // manage time actions
+        // prepare sleep operation
         $sleepInfo = $this->manageSleepAction();
 
+        // prepare activities action
         // todo : manage actions for activityTime
         // 86400 = 24h * 60 min * 60 sec = a complete day
         $activityTime = 86400 - $sleepInfo['total'];
+        // durée des actions... supprimer des actions?
 
         // build actions
-        $routineActions = [];
-        $actionsListCount = count($actionsList);
-        foreach ($actionsList as $key => $action) {
+        $routineActionsRaw = $this->buildActions($actionsList, $sleepInfo);
 
-            if ($key === 0 && $actionsList[0] === 'sleep') {
-                array_push($routineActions, [$actionsList[0], 0, $sleepInfo['exceedingTime']]);
-            }
+        // convert actions into json
+        $routineActions = $this->transformActions($routineActionsRaw);
 
-            else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
-            array_push($routineActions, [$action, $sleepInfo['begin'] ,"86400"]);
-            }
+        $routine[$routineName] =  $routineActions;
 
-            else {
-                // todo : to change
-                array_push($routineActions, [$action, "18000","36000"]);
-            }
-        }
-
-        $routine = [ $routineName, $routineActions];
+        //todo : save the routine ??? Elsewhere?
 
         return $routine;
-
-        //todo : create many routines
-        //todo : save the routines
     }
 
     /**
@@ -129,27 +135,59 @@ class RoutineGeneratorService
      */
     public function generateRoutineName()
     {
-        return 'default-'.($this->em->getRepository(Routine::class)->findLastRoutineId()+1);
+        (!$this->lastRoutineId) ? $this->lastRoutineId = $this->em->getRepository(Routine::class)->findLastRoutineId()+1 : $this->lastRoutineId++;
+        return 'default'.$this->lastRoutineId;
     }
 
     /**
-     * @param $type
-     * @return string
+     * @param $actionsList
+     * @param $sleepInfo
+     * @return array
      */
-    private function getClassName(String $type):string
+    public function buildActions(Array $actionsList, Array $sleepInfo):array
     {
-        return 'App\Component\SQL\\' . ucfirst($type) . 'SQL';
+        $routineActions = [];
+        $actionsListCount = count($actionsList);
+        foreach ($actionsList as $key => $action) {
+
+            if ($key === 0 && $actionsList[0] === 'sleep') {
+                array_push($routineActions, [$actionsList[0], 0, $sleepInfo['exceedingTime']]);
+            }
+
+            else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
+                array_push($routineActions, [$action, $sleepInfo['begin'] ,"86400"]);
+            }
+
+            else {
+                // todo : to change
+                array_push($routineActions, [$action, "18000","36000"]);
+            }
+        }
+
+        return $routineActions;
     }
 
     /**
-     * @param String $type
-     * @param String $queryName
-     * @return mixed
+     * convert action format into {"action", "start", "end"}
+     *
+     * @param array $listActionsRaw
+     * @return array
      */
-    private function getSQLQuery(String $type, String $queryName)
+    public function transformActions(Array $listActionsRaw): string
     {
-        $className = $this->getClassName($type);
-        return (new $className())->$queryName();
+        $actions ='';
+        $counter = 0;
+        $max = count($listActionsRaw);
+
+        foreach ($listActionsRaw as $rawAction) {
+            $counter++;
+            ($counter === 1)? $actions = '{' : '';
+
+            $actions = $actions.'{"'.$rawAction[0].'","'.$rawAction[1].'","'.$rawAction[2].'"}';
+            ($counter < $max)? $actions = $actions.',' : $actions = $actions.'}';
+        }
+
+        return $actions;
     }
 
 }

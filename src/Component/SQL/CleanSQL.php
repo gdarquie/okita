@@ -16,7 +16,7 @@ class CleanSQL
               DELETE FROM routine CASCADE;
               DELETE FROM action CASCADE;
             END
-            $$LANGUAGE plpgsql;
+            $$ LANGUAGE plpgsql;
         EOT;
 
         return $sql;
