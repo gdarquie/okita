@@ -33,31 +33,23 @@ class GenerateProjectCommand extends AbstractSQLCommand
             '',
         ]);
 
-        // Set project path
+        // Preprare generation
         $project = $input->getArgument('project');
-        $rootPath = $this->container->get('kernel')->getProjectDir();
-        $projectPath = $rootPath.'/src/Domain/Project';
-        $projectFile = $projectPath.'/'.$project.'.yaml';
 
-        // Parse project config
+        // Get project file and parse config file for setting vars
+        $projectFile = $this->getProjectFile($project);
         $value = Yaml::parseFile($projectFile);
         $totalCharacters = $value['characters']['total'];
-
-        // Get all routines
         $routines = $this->collectRoutines($value['routines']);
+
         $io->success('Project pathes and config setted!');
 
         // Initialization
-        $output->writeln([
-            'Initialization is launched',
-            '============',
-            '',
-        ]);
         (new SQLService($this->em))->initialize();
+
         $io->success('Initialization succeeds!');
 
-
-        // Create Routines
+        // Create Routines : launch command
         $buildRoutinesCommand = $this->getApplication()->find('app:build:routine');
 
         foreach ($routines as $key => $value) {
@@ -72,15 +64,18 @@ class GenerateProjectCommand extends AbstractSQLCommand
             $buildRoutinesCommand->run($buildRoutinesCommandInput, $output);
         }
 
-        //generate characters
+        $io->success('Routine generation succeeds!');
+
+        // Launch command for character generation : launch command
         $generateCharactersCommand = $this->getApplication()->find('app:generate:characters');
         $arguments = [
             'command' => 'app:build:routine',
             'number'    => $totalCharacters
         ];
-
         $generateCharactersCommandInput = new ArrayInput($arguments);
         $generateCharactersCommand->run($generateCharactersCommandInput, $output);
+
+        $io->success('Character generation succeeds!');
     }
 
     /**
@@ -111,5 +106,17 @@ class GenerateProjectCommand extends AbstractSQLCommand
         }
 
         return $routines;
+    }
+
+    /**
+     * @param String $project
+     * @return string
+     */
+    private function getProjectFile(String $project): string
+    {
+        $rootPath = $this->container->get('kernel')->getProjectDir();
+        $projectPath = $rootPath.'/src/Domain/Project';
+
+        return $projectPath.'/'.$project.'.yaml';
     }
 }
