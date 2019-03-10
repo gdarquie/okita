@@ -5,10 +5,12 @@ namespace App\Controller;
 use App\Entity\Action;
 use App\Entity\Character;
 use App\Entity\Habit;
+use App\Entity\Routine;
 use App\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Yaml\Yaml;
 
 class SynthesisController extends AbstractController
 {
@@ -34,6 +36,8 @@ class SynthesisController extends AbstractController
         $statsCharacter = $this->getStatsCharacters();
         $statsAction = $this->getStatsAction();
         $statsHabit = $this->getStatsHabit();
+        $statsRoutine = $this->getStatsRoutine();
+        $statsParams = $this->getStatsParams();
 
         return $this->render('synthesis.html.twig', [
             'character' => $this->getRandomCharacter(rand($statsCharacter['min_id'],$statsCharacter['max_id'])),
@@ -42,6 +46,8 @@ class SynthesisController extends AbstractController
             'statsHabit' => $statsHabit,
             'ratioSex' => $this->getRatioSex(),
             'ageByDecade' => $this->getAgeByDecade(),
+            'statsRoutine' => $statsRoutine,
+            'statsParams' => $statsParams
         ]);
     }
 
@@ -95,6 +101,7 @@ class SynthesisController extends AbstractController
      */
     private function getStatsHabit()
     {
+        // Total of habits
         $query = $this->em->createQuery(
             'SELECT COUNT(h.id) as total FROM '.Habit::class.' h'
         );
@@ -107,7 +114,7 @@ class SynthesisController extends AbstractController
      * @return mixed[]
      * @throws \Doctrine\DBAL\DBALException
      */
-    public function getAgeByDecade()
+    public function getAgeByDecade() :array
     {
         $sql = "SELECT array_to_json(get_birthdate_by_decades(-100, 0))";
         $stmt = $this->em->getConnection()->prepare($sql);
@@ -128,7 +135,7 @@ class SynthesisController extends AbstractController
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function getRatioSex()
+    public function getRatioSex(): array
     {
         $query = $this->em->createQuery('SELECT COUNT(c.id) as total FROM '.Character::class.' c WHERE c.sex = :sex GROUP BY c.sex');
         $query->setParameter('sex', 'F');
@@ -144,7 +151,7 @@ class SynthesisController extends AbstractController
     /**
      * @return mixed
      */
-    public function getStatsFiction()
+    public function getStatsFiction(): array
     {
         $query = $this->em->createQuery('SELECT s FROM '.Setting::class.' s WHERE s.key = :key');
         $query->setParameter('key', '');
@@ -153,6 +160,56 @@ class SynthesisController extends AbstractController
         $query = $this->em->createQuery('SELECT s FROM '.Setting::class.' s WHERE s.key = :key');
         $query->setParameter('key', '');
         $stats['fiction_end'] = $query->getResult();
+
+        return $stats;
+    }
+
+    /**
+     * @return array
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function getStatsRoutine(): array
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(r) FROM '.Routine::class.' r'
+        );
+        $stats['total'] = $query->getSingleScalarResult();
+
+        // Number of characters linked to habits
+        $query = $this->em->createQuery(
+            'SELECT COUNT(c) FROM '.Character::class.' c JOIN c.routines r'
+        );
+        $stats['total_linked'] = $query->getSingleScalarResult();
+
+        // Habits connected with the more characters
+        $query = $this->em->createQuery(
+            'SELECT COUNT(r.id) as nb, r.name  FROM '.Character::class.' c JOIN c.routines r GROUP BY r.id ORDER BY nb DESC'
+        );
+        $query->setMaxResults(1);
+        $stats['most_used'] = $query->getSingleResult();
+
+        // Habits connected with the less characters
+        $query = $this->em->createQuery(
+            'SELECT COUNT(r.id) as nb, r.name  FROM '.Character::class.' c JOIN c.routines r GROUP BY r.id ORDER BY nb ASC'
+        );
+        $query->setMaxResults(1);
+        $stats['less_used'] = $query->getSingleResult();
+
+        return $stats;
+    }
+
+    /**
+     * @return array
+     */
+    public function getStatsParams($project = 'la-degradation'): array
+    {
+        $rootPath = $this->getParameter('kernel.project_dir');
+        $projectPath = $rootPath.'/src/Domain/Project';
+        $projectFile = $projectPath.'/'.$project.'.yaml';
+
+        $value = Yaml::parseFile($projectFile);
+        $stats = $value['fiction'];
 
         return $stats;
     }

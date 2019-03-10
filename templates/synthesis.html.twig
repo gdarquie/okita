@@ -20,11 +20,11 @@
                 </tr>
                 <tr>
                     <td>Début de la fiction</td>
-                    <td></td>
+                    <td>{{ statsParams['start'] }}</td>
                 </tr>
                 <tr>
                     <td>Fin de la fiction</td>
-                    <td></td>
+                    <td>{{ statsParams['end'] }}</td>
                 </tr>
                 <tr>
                     <td>Plus grand âge au début de la fiction </td>
@@ -55,7 +55,23 @@
                 </tr>
                 <tr>
                     <td>Nombre d'habitudes</td>
-                    <td>{{ statsHabit.total }}</td>
+                    <td>{{ statsHabit['total'] }}</td>
+                </tr>
+                <tr>
+                    <td>Nombre de routines</td>
+                    <td>{{ statsRoutine['total'] }}</td>
+                </tr>
+                <tr>
+                    <td>Nombre de routines liées à un personnage</td>
+                    <td>{{ statsRoutine['total_linked']}}</td>
+                </tr>
+                <tr>
+                    <td>Routine la plus utilisée</td>
+                    <td>{{ statsRoutine['most_used']['name'] }} ({{ statsRoutine['most_used']['nb'] }})</td>
+                </tr>
+                <tr>
+                    <td>Routine la moins utilisée</td>
+                    <td>{{ statsRoutine['less_used']['name'] }} ({{ statsRoutine['less_used']['nb'] }})</td>
                 </tr>
             </table>
         </section>

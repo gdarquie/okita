@@ -148,6 +148,11 @@ class RoutineGeneratorService
     {
         $routineActions = [];
         $actionsListCount = count($actionsList);
+        $activitiesListCount = ($actionsListCount-2);
+
+        $activityTime = 86400 - $sleepInfo['total'];
+        $actionTime = intdiv($activityTime,$activitiesListCount);
+
         foreach ($actionsList as $key => $action) {
 
             if ($key === 0 && $actionsList[0] === 'sleep') {
@@ -159,8 +164,11 @@ class RoutineGeneratorService
             }
 
             else {
-                // todo : to change
-                array_push($routineActions, [$action, "18000","36000"]);
+                //we had one to the end time of the last routine
+                $startRoutine = (end($routineActions)[2]+1);
+                $endRoutine = ($startRoutine+$actionTime);
+
+                array_push($routineActions, [$action, $startRoutine, $endRoutine]);
             }
         }
 

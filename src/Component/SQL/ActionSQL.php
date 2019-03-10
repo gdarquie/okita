@@ -64,39 +64,32 @@ class ActionSQL
     {
         $sql = <<< EOT
         CREATE OR REPLACE FUNCTION generate_actions_for_day_and_character(day INT, v_character_id INT) RETURNS VOID AS $$
-
+        
         DECLARE
           start_day BIGINT;
-          end_day BIGINT;
           v_routine RECORD;
           v_habit RECORD;
-          v_count INTEGER;
           v_nb_habits INTEGER;
         
         BEGIN
-          start_day := (day*(3600*24));
-        
-          -- commencer par récupérer la dernière action?
-          -- ???
-        
-          -- get routine from character
-          v_routine = (SELECT r
+            start_day := (day*(3600*24));
+            
+            -- get routine from character
+            v_routine = (SELECT r
             FROM routine r
             INNER JOIN character_routine cr on r.id = cr.routine_id
             WHERE cr.character_id = v_character_id LIMIT 1);
-        
-          v_nb_habits := (SELECT COUNT(*) FROM habit WHERE routine_id = v_routine.id);
-          v_count := 1;
-        
-          -- get all habits
-          -- for each habit, insert action
-           FOR v_habit IN
+            
+            v_nb_habits := (SELECT COUNT(*) FROM habit WHERE routine_id = v_routine.id);
+                
+            -- get all habits, for each habit, insert action
+            FOR v_habit IN
               SELECT name, start, "end" as v_end FROM habit WHERE routine_id = v_routine.id
             LOOP
+                RAISE NOTICE '%', v_habit;
+            
             PERFORM insert_action(v_habit.name, (start_day + v_habit.start), (start_day + v_habit.v_end), v_character_id);
-           v_count := v_count + 1;
-            END LOOP;
-        
+            END LOOP;      
         END;
         $$ LANGUAGE plpgsql;
         EOT;
