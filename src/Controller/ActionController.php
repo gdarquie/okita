@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Action;
 use App\Entity\Character;
+use App\Service\ActionWriterService;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -28,9 +29,17 @@ class ActionController extends AbstractController
         $characterId = $character->getId();
         $actions = $this->getDoctrine()->getRepository(Action::class)->findByCharacter($characterId, $time);
 
+        $actionWriterService = new ActionWriterService();
+        $descriptions = [];
+
+        foreach ($actions as $action) {
+            array_push($descriptions, $actionWriterService->write($action)) ;
+        }
+
         return $this->render('actions.html.twig', array(
             'character' => $character,
-            'actions' => $actions
+            'actions' => $actions,
+            'descriptions' => $descriptions
         ));
 
     }

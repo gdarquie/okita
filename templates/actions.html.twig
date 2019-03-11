@@ -15,10 +15,16 @@
         <h1>Liste des actions de {{ character.name }}</h1>
         <p><a href='{{ path('get_character', {'id': character.id}) }}'>Voir le personnage</a></p>
 
+        <h2>Actions brutes</h2>
         {% for action in actions %}
             <article>
                 <p>{{ action.title |capitalize }} entre {{ (action.startAt / 3600) }}h{{ action.startAt % 3600 }} min et  {{ (action.endAt / 3600) }}h{{ action.endAt % 3600 }}min.</p>
             </article>
+        {% endfor %}
+
+        <h2>Description des actions</h2>
+        {% for action in descriptions  %}
+            <p>{{ action }}</p>
         {% endfor %}
     </div>
 {% endblock %}
