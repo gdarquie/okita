@@ -29,11 +29,11 @@ class ActionController extends AbstractController
         $characterId = $character->getId();
         $actions = $this->getDoctrine()->getRepository(Action::class)->findByCharacter($characterId, $time);
 
-        $actionWriterService = new ActionWriterService();
+        $actionWriterService = new ActionWriterService($character);
         $descriptions = [];
 
         foreach ($actions as $action) {
-            array_push($descriptions, $actionWriterService->write($action, $character));
+            array_push($descriptions, $actionWriterService->write($action));
         }
 
         return $this->render('actions.html.twig', array(

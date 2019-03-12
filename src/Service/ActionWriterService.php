@@ -4,7 +4,6 @@ namespace App\Service;
 
 use App\Entity\Action;
 use App\Entity\Character;
-use PhpParser\Node\Scalar\String_;
 
 /**
  * Class ActionWriterService
@@ -13,14 +12,31 @@ use PhpParser\Node\Scalar\String_;
 class ActionWriterService
 {
     /**
+     * @var Character
+     */
+    private $character;
+
+    /**
+     * @var Action
+     */
+    private $action;
+
+    public function __construct(Character $character)
+    {
+        $this->character = $character;
+
+    }
+
+    /**
      * @param $action
      * @return mixed
      */
-    public function write(Action $action, Character $character)
+    public function write(Action $action)
     {
-        $title = $action->getTitle();
+        $this->action = $action;
+        $title = $this->action->getTitle();
         $description = $this->getAction($title);
-        $description = $this->translateAction($description, $character);
+        $description = $this->translateAction($description);
 
         return $description;
     }
@@ -36,7 +52,7 @@ class ActionWriterService
 
             $sleep[0] = '{{character.name}} ne dormit pas très bien. {{character.pronoun}} passa la nuit à se retourner dans le lit. {{character.name}} ne se sentait pas en forme au réveil.';
 
-            $sleep[1] = '{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}}, d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e.';
+            $sleep[1] = '{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}} , d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e.';
 
             $random = (rand(1, count($sleep))-1);
 
@@ -57,23 +73,62 @@ class ActionWriterService
     }
 
     /**
-     * @param String $text
-     * @param Character $character
+     * @param $text
      * @return string
      */
-    private function translateAction(String $text, Character $character): string
+    public function getCharacterName($string)
+    {
+        ($string === '{{character.name}}') ? $result = true : $result = false;
+
+        return $result;
+    }
+
+    public function getSpecialString($string)
+    {
+        $result = false;
+        $pattern = "#\{\{(.*)\}\}#";
+
+        if(preg_match($pattern, $string)){
+            $result = true;
+        }
+
+        return $result;
+    }
+    
+    /**
+     * @param String $text
+     * @return string
+     */
+    private function translateAction(String $text): string
     {
         $arrayText = explode(' ',$text);
 
-        // Transform name
-        // todo : faire en sorte que fonctionne même s'il y a plusieurs fois le prénom du personnage
-        (in_array('{{character.name}}', $arrayText)) ? $arrayText[array_search('{{character.name}}', $arrayText)]= $character->getName() : '';
+        // Transform name and action
+        $arrayFiltered = array_filter($arrayText, array($this, 'getSpecialString'));
+
+        foreach($arrayFiltered as $key => $value)
+        {
+            if($arrayText[$key] === '{{character.name}}')
+            {
+                $arrayText[$key] = $this->character->getName();
+            }
+
+            else if ($arrayText[$key] === '{{action.start}}')
+            {
+                $arrayText[$key]  = $this->action->getStartAt();
+            }
+
+            else if ($arrayText[$key] === '{{action.end}}')
+            {
+                //todo : add human time conversion
+                $arrayText[$key]  = $this->action->getEndAt();
+            }
+        }
 
         // Transform pronoun
         // todo : faire quelque chose s'il y a plusieurs personnages
-        (in_array('{{character.pronoun}}', $arrayText)) ? $arrayText[array_search('{{character.pronoun}}', $arrayText)]= $character->getPronoun($character->getPronoun()) : '';
+        (in_array('{{character.pronoun}}', $arrayText)) ? $arrayText[array_search('{{character.pronoun}}', $arrayText)]= $this->character->getPronoun($this->character->getPronoun()) : '';
 
-        // Transform action
 
         // Transform inclusive language
 
