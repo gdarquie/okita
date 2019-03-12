@@ -33,7 +33,7 @@ class ActionController extends AbstractController
         $descriptions = [];
 
         foreach ($actions as $action) {
-            array_push($descriptions, $actionWriterService->write($action)) ;
+            array_push($descriptions, $actionWriterService->write($action, $character));
         }
 
         return $this->render('actions.html.twig', array(

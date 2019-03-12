@@ -155,4 +155,14 @@ class Character extends AbstractEntity
     {
         $this->routines = $routines;
     }
+
+    /**
+     * @return string
+     */
+    public function getPronoun(): string
+    {
+        ($this->getSex() === 'F') ? $pronoun = 'elle' : $pronoun = 'il';
+
+        return $pronoun;
+    }
 }
