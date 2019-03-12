@@ -31,9 +31,16 @@ class ActionWriterService
      */
     private function getAction($title)
     {
+        // todo : améliorer le random
         if ($title === 'sleep') {
-            return '{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}}, d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e.
-';
+
+            $sleep[0] = '{{character.name}} ne dormit pas très bien. {{character.pronoun}} passa la nuit à se retourner dans le lit. {{character.name}} ne se sentait pas en forme au réveil.';
+
+            $sleep[1] = '{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}}, d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e.';
+
+            $random = (rand(1, count($sleep))-1);
+
+            return $sleep[$random];
         }
 
         else if ($title === 'play') {
@@ -59,9 +66,11 @@ class ActionWriterService
         $arrayText = explode(' ',$text);
 
         // Transform name
+        // todo : faire en sorte que fonctionne même s'il y a plusieurs fois le prénom du personnage
         (in_array('{{character.name}}', $arrayText)) ? $arrayText[array_search('{{character.name}}', $arrayText)]= $character->getName() : '';
 
         // Transform pronoun
+        // todo : faire quelque chose s'il y a plusieurs personnages
         (in_array('{{character.pronoun}}', $arrayText)) ? $arrayText[array_search('{{character.pronoun}}', $arrayText)]= $character->getPronoun($character->getPronoun()) : '';
 
         // Transform action
