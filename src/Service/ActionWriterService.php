@@ -17,6 +17,11 @@ class ActionWriterService
     private $character;
 
     /**
+     * @var HumanTimeConverterService
+     */
+    private $humanTimeConverterService;
+
+    /**
      * @var Action
      */
     private $action;
@@ -24,6 +29,8 @@ class ActionWriterService
     public function __construct(Character $character)
     {
         $this->character = $character;
+        $this->humanTimeConverterService = new HumanTimeConverterService();
+
 
     }
 
@@ -67,6 +74,10 @@ class ActionWriterService
             return '{{character.name}} dansa.';
         }
 
+        else if ($title === 'work') {
+            return '{{character.name}} travailla de {{action.start}} à {{action.end}} .';
+        }
+
         else {
             return $title;
         }
@@ -86,7 +97,7 @@ class ActionWriterService
     public function getSpecialString($string)
     {
         $result = false;
-        $pattern = "#\{\{(.*)\}\}#";
+        $pattern = "/\{\{(.*)\}\}/";
 
         if(preg_match($pattern, $string)){
             $result = true;
@@ -115,7 +126,8 @@ class ActionWriterService
 
             else if ($arrayText[$key] === '{{action.start}}')
             {
-                $arrayText[$key]  = $this->action->getStartAt();
+                $arrayText[$key] = $this->action->getStartAt();
+                $arrayText[$key] = $this->humanTimeConverterService->convert($arrayText[$key], 'default');
             }
 
             else if ($arrayText[$key] === '{{action.end}}')
@@ -131,7 +143,6 @@ class ActionWriterService
 
 
         // Transform inclusive language
-
         $translation = implode(' ', $arrayText);
 
         return $translation;
