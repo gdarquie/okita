@@ -25,20 +25,10 @@ class BuildRoutineCommand extends AbstractSQLCommand
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $io = new SymfonyStyle($input, $output);
-
-        $output->writeln([
-            'Routines generator',
-            '============',
-            '',
-        ]);
-
         $name = $input->getArgument('name');
         $content = $input->getArgument('content');
 
         $statement = $this->connection->executeQuery('SELECT build_routine(\''.$name.'\', \''.$content.'\')');
         $statement->fetchAll();
-
-        $io->success('You have a new command! Now make it your own! Pass --help to see your options.');
     }
 }

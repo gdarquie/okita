@@ -4,6 +4,7 @@ namespace App\Command;
 
 use App\Service\RoutineGeneratorService;
 use App\Service\SQLService;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
@@ -52,6 +53,8 @@ class GenerateProjectCommand extends AbstractSQLCommand
         // Create Routines : launch command
         $buildRoutinesCommand = $this->getApplication()->find('app:build:routine');
 
+        $progressBar = new ProgressBar($output, count($routines));
+        $progressBar->start();
         foreach ($routines as $key => $value) {
 
             $arguments = [
@@ -62,6 +65,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
             $buildRoutinesCommandInput = new ArrayInput($arguments);
             $buildRoutinesCommand->run($buildRoutinesCommandInput, $output);
+            $progressBar->advance();
         }
 
         $io->success('Routine generation succeeds!');

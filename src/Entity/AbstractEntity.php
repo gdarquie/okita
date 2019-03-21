@@ -121,7 +121,7 @@ abstract class AbstractEntity
     {
         $this->setUpdatedAt(new \DateTime('now'));
 
-        if ($this->setCreatedAt() == null) {
+        if ($this->getCreatedAt() == null) {
             $this->setCreatedAt(new \DateTime('now'));
         }
     }
