@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Create;
 
+use App\Command\AbstractSQLCommand;
 use App\Service\RoutineGeneratorService;
 use App\Service\SQLService;
 use Symfony\Component\Console\Helper\ProgressBar;

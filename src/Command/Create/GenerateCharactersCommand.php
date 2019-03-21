@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Command;
+namespace App\Command\Create;
 
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
