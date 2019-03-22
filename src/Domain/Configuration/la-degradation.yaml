@@ -14,7 +14,7 @@ routines:
     - "custom10": '{{"dormir","18000","36000"},{"agir","36001","54000"}, {"dormir","54001","62000"} }'
   default:
     "total": 100
-    "actions": [ 'sleep', 'work']
+    "actions": [ 'sleep', 'work', 'play', 'dance']
 
 
 characters:
