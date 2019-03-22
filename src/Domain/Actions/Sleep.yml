@@ -1,0 +1,3 @@
+textes:
+  - "{{character.name}} ne dormit pas très bien. {{character.pronoun}} passa la nuit à se retourner dans le lit. {{character.name}} ne se sentait pas en forme au réveil."
+  - "{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}} , d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e."

@@ -16,7 +16,7 @@ class GenerationCleanCommand extends AbstractSQLCommand
     {
         $this
             ->setDescription('Clean generation')
-            ->addArgument('project', InputArgument::OPTIONAL, 'Project slug you want to clean')
+            ->addArgument('project', InputArgument::OPTIONAL, 'Configuration slug you want to clean')
 
         ;
     }

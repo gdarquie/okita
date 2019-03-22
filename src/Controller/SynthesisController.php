@@ -205,7 +205,7 @@ class SynthesisController extends AbstractController
     public function getStatsParams($project = 'la-degradation'): array
     {
         $rootPath = $this->getParameter('kernel.project_dir');
-        $projectPath = $rootPath.'/src/Domain/Project';
+        $projectPath = $rootPath.'/src/Domain/Configuration';
         $projectFile = $projectPath.'/'.$project.'.yaml';
 
         $value = Yaml::parseFile($projectFile);

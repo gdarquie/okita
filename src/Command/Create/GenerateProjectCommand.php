@@ -21,7 +21,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
     {
         $this
             ->setDescription('Generate a new project')
-            ->addArgument('project', InputArgument::OPTIONAL, 'Project slug you want to create')
+            ->addArgument('project', InputArgument::OPTIONAL, 'Configuration slug you want to create')
         ;
     }
 
@@ -30,7 +30,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
         $io = new SymfonyStyle($input, $output);
 
         $output->writeln([
-            'Project generation begins',
+            'Configuration generation begins',
             '============',
             '',
         ]);
@@ -44,7 +44,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
         $totalCharacters = $value['characters']['total'];
         $routines = $this->collectRoutines($value['routines']);
 
-        $io->success('Project pathes and config setted!');
+        $io->success('Configuration pathes and config setted!');
 
         // Initialization
         (new SQLService($this->em))->initialize();
@@ -120,7 +120,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
     private function getProjectFile(String $project): string
     {
         $rootPath = $this->container->get('kernel')->getProjectDir();
-        $projectPath = $rootPath.'/src/Domain/Project';
+        $projectPath = $rootPath.'/src/Domain/Configuration';
 
         return $projectPath.'/'.$project.'.yaml';
     }
