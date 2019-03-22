@@ -4,6 +4,8 @@ namespace App\Service;
 
 use App\Entity\Action;
 use App\Entity\Character;
+use Symfony\Component\Finder\Finder;
+use Symfony\Component\Yaml\Yaml;
 
 /**
  * Class ActionWriterService
@@ -54,16 +56,23 @@ class ActionWriterService
      */
     private function getAction($title)
     {
-        // todo : améliorer le random
+        $finder = new Finder();
+        $finder->in('../src/Domain/Actions');
+
+        // get all files
+        $files = [];
+        foreach ($finder as $file) {
+            array_push($files, $file->getRealPath());
+        }
+
+        $value = Yaml::parseFile($files[0]);
+        $textes = $value['textes'];
+
+        //todo : get the name before .yml and after last/ and lowecase it
+
         if ($title === 'sleep') {
-
-            $sleep[0] = '{{character.name}} ne dormit pas très bien. {{character.pronoun}} passa la nuit à se retourner dans le lit. {{character.name}} ne se sentait pas en forme au réveil.';
-
-            $sleep[1] = '{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}} , d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e.';
-
-            $random = (rand(1, count($sleep))-1);
-
-            return $sleep[$random];
+            $random = (rand(1, count($textes))-1);
+            return $textes[$random];
         }
 
         else if ($title === 'play') {
@@ -140,7 +149,6 @@ class ActionWriterService
         // Transform pronoun
         // todo : faire quelque chose s'il y a plusieurs personnages
         (in_array('{{character.pronoun}}', $arrayText)) ? $arrayText[array_search('{{character.pronoun}}', $arrayText)]= $this->character->getPronoun($this->character->getPronoun()) : '';
-
 
         // Transform inclusive language
         $translation = implode(' ', $arrayText);
