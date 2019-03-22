@@ -62,34 +62,28 @@ class ActionWriterService
         // get all files
         $files = [];
         foreach ($finder as $file) {
-            array_push($files, $file->getRealPath());
+            // get all files names and convert into action
+            preg_match('/.*\/(.*)\.yml/', $file, $output_array);
+            $fileName = strtolower($output_array[1]);
+            // associate files names with action path
+            $files[$fileName] =  $file->getRealPath();
         }
 
-        $value = Yaml::parseFile($files[0]);
-        $textes = $value['textes'];
 
         //todo : get the name before .yml and after last/ and lowecase it
 
-        if ($title === 'sleep') {
-            $random = (rand(1, count($textes))-1);
-            return $textes[$random];
+        // vérifier si $title est dans la liste des actions, si non, faire un message par défaut
+
+        if(!array_key_exists($title, $files)){
+            return '{{character.name}} fit une action.';
         }
 
-        else if ($title === 'play') {
-            return '{{character.name}} joua.';
-        }
+        $value = Yaml::parseFile($files[$title]);
+        $textes = $value['textes'];
 
-        else if ($title === 'dance') {
-            return '{{character.name}} dansa.';
-        }
+        $random = (rand(1, count($textes))-1);
+        return $textes[$random];
 
-        else if ($title === 'work') {
-            return '{{character.name}} travailla de {{action.start}} à {{action.end}} .';
-        }
-
-        else {
-            return $title;
-        }
     }
 
     /**
