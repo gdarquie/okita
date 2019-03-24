@@ -69,4 +69,42 @@ class CharacterRepository extends ServiceEntityRepository
         return $query->getSingleScalarResult();
     }
 
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countCharactersRoutines()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(c) FROM '.Character::class.' c JOIN c.routines r');
+
+        return $query->getSingleScalarResult();
+    }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function findMostUsedRoutine()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(r.id) as nb, r.name  FROM '.Character::class.' c JOIN c.routines r GROUP BY r.id ORDER BY nb DESC'
+        );
+        $query->setMaxResults(1);
+
+        return $query->getSingleResult();
+    }
+
+    public function findLessUsedRoutine()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(r.id) as nb, r.name  FROM '.Character::class.' c JOIN c.routines r GROUP BY r.id ORDER BY nb ASC'
+        );
+        $query->setMaxResults(1);
+
+        return $query->getSingleResult();
+    }
+
+
 }

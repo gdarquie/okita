@@ -59,4 +59,5 @@ class RoutineRepository extends ServiceEntityRepository
 
         return $query->getSingleScalarResult();
     }
+
 }

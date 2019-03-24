@@ -6,7 +6,6 @@ use App\Entity\Action;
 use App\Entity\Character;
 use App\Entity\Habit;
 use App\Entity\Routine;
-use App\Entity\Setting;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Routing\Annotation\Route;
@@ -33,19 +32,17 @@ class SynthesisController extends AbstractController
      */
     public function index()
     {
-        $statsCharacter = $this->getDoctrine()->getRepository(Character::class)->findStatsCharacters();
-        $statsRoutine = $this->getStatsRoutine();
-        $statsParams = $this->getStatsParams();
+        $statsCharacter = $this->getCharacterRepository()->findStatsCharacters();
 
         return $this->render('synthesis.html.twig', [
-            'character' => $this->getDoctrine()->getRepository(Character::class)->findOneById(rand($statsCharacter['min_id'],$statsCharacter['max_id'])),
+            'character' => $this->getCharacterRepository()->findOneById(rand($statsCharacter['min_id'],$statsCharacter['max_id'])),
             'statsCharacter' => $statsCharacter,
             'statsAction' => $this->getDoctrine()->getRepository(Action::class)->countActions(),
             'statsHabit' => $this->getDoctrine()->getRepository(Habit::class)->countHabits(),
-            'ratioSex' => $this->getDoctrine()->getRepository(Character::class)->countBySex(),
+            'ratioSex' => $this->getCharacterRepository()->countBySex(),
             'ageByDecade' => $this->getAgeByDecade(),
-            'statsRoutine' => $statsRoutine,
-            'statsParams' => $statsParams
+            'statsRoutine' => $this->getStatsRoutine(),
+            'statsParams' => $this->getStatsParams()
         ]);
     }
 
@@ -71,22 +68,6 @@ class SynthesisController extends AbstractController
     }
 
     /**
-     * @return mixed
-     */
-    public function getStatsFiction(): array
-    {
-        $query = $this->em->createQuery('SELECT s FROM '.Setting::class.' s WHERE s.key = :key');
-        $query->setParameter('key', '');
-        $stats['fiction_begin'] = $query->getResult();
-
-        $query = $this->em->createQuery('SELECT s FROM '.Setting::class.' s WHERE s.key = :key');
-        $query->setParameter('key', '');
-        $stats['fiction_end'] = $query->getResult();
-
-        return $stats;
-    }
-
-    /**
      * @return array
      * @throws \Doctrine\ORM\NoResultException
      * @throws \Doctrine\ORM\NonUniqueResultException
@@ -97,24 +78,13 @@ class SynthesisController extends AbstractController
         $stats['total'] = $this->getDoctrine()->getRepository(Routine::class)->countRoutines();
 
         // Number of characters linked to habits
-        $query = $this->em->createQuery(
-            'SELECT COUNT(c) FROM '.Character::class.' c JOIN c.routines r'
-        );
-        $stats['total_linked'] = $query->getSingleScalarResult();
+        $stats['total_linked'] = $this->getCharacterRepository()->countCharactersRoutines();
 
         // Habits connected with the more characters
-        $query = $this->em->createQuery(
-            'SELECT COUNT(r.id) as nb, r.name  FROM '.Character::class.' c JOIN c.routines r GROUP BY r.id ORDER BY nb DESC'
-        );
-        $query->setMaxResults(1);
-        $stats['most_used'] = $query->getSingleResult();
+        $stats['most_used'] = $this->getCharacterRepository()->findMostUsedRoutine();
 
         // Habits connected with the less characters
-        $query = $this->em->createQuery(
-            'SELECT COUNT(r.id) as nb, r.name  FROM '.Character::class.' c JOIN c.routines r GROUP BY r.id ORDER BY nb ASC'
-        );
-        $query->setMaxResults(1);
-        $stats['less_used'] = $query->getSingleResult();
+        $stats['less_used'] = $this->getCharacterRepository()->findLessUsedRoutine();
 
         return $stats;
     }
@@ -132,5 +102,13 @@ class SynthesisController extends AbstractController
         $stats = $value['fiction'];
 
         return $stats;
+    }
+
+    /**
+     * @return \App\Repository\CharacterRepository|\Doctrine\Common\Persistence\ObjectRepository
+     */
+    private function getCharacterRepository()
+    {
+        return $this->getDoctrine()->getRepository(Character::class);
     }
 }
