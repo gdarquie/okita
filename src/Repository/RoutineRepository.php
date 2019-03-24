@@ -15,6 +15,9 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class RoutineRepository extends ServiceEntityRepository
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
 
     public function __construct(RegistryInterface $registry, EntityManagerInterface $em)

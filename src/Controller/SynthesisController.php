@@ -33,7 +33,7 @@ class SynthesisController extends AbstractController
      */
     public function index()
     {
-        $statsCharacter = $this->getStatsCharacters();
+        $statsCharacter = $this->getDoctrine()->getRepository(Character::class)->findStatsCharacters();
         $statsAction = $this->getStatsAction();
         $statsHabit = $this->getStatsHabit();
         $statsRoutine = $this->getStatsRoutine();
@@ -44,7 +44,7 @@ class SynthesisController extends AbstractController
             'statsCharacter' => $statsCharacter,
             'statsAction' => $statsAction,
             'statsHabit' => $statsHabit,
-            'ratioSex' => $this->getRatioSex(),
+            'ratioSex' => $this->getDoctrine()->getRepository(Character::class)->findRatio(),
             'ageByDecade' => $this->getAgeByDecade(),
             'statsRoutine' => $statsRoutine,
             'statsParams' => $statsParams
@@ -64,19 +64,6 @@ class SynthesisController extends AbstractController
         $character = $query->getSingleResult();
 
         return $character;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function getStatsCharacters()
-    {
-        $query = $this->em->createQuery('SELECT COUNT(c.id) as total, MAX((c.deathDate - c.birthDate)/(365*24*3600)) as max_age, MIN((c.deathDate - c.birthDate)/(365*24*3600)) as min_age, MAX(c.id) as max_id, MIN(c.id) as min_id FROM '.Character::class.' c ');
-        $stats = $query->getSingleResult();
-        
-        return $stats;
     }
 
     /**
