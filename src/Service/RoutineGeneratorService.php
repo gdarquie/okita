@@ -7,7 +7,11 @@ use Doctrine\ORM\EntityManagerInterface;
 
 class RoutineGeneratorService
 {
+    /**
+     * @var EntityManagerInterface
+     */
     private $em;
+
     private $lastRoutineId;
 
     public function __construct(EntityManagerInterface $em)
@@ -19,12 +23,12 @@ class RoutineGeneratorService
      * @param $nbRoutines
      * @return array
      */
-    public function createRoutines($nbRoutines) :array
+    public function createRoutines($nbRoutines, $list = []) :array
     {
         $routines = [];
 
         for($i = 0; $i < $nbRoutines; $i++) {
-            $routine = $this->createRoutine();
+            $routine = $this->createRoutine($list);
             $routineName = (array_keys($routine))[0];
             $routineAction = $routine[$routineName];
             $routines[$routineName] = $routineAction;
@@ -43,10 +47,10 @@ class RoutineGeneratorService
             $actionsListRaw = $this->getActionsTypeList();
         }
 
-        // generate name
+        // generate name for the routine
         $routineName = $this->generateRoutineName();
 
-        // select actions
+        // select actions connected to the routine
         $actionsList = $this->selectAction($actionsListRaw);
 
         // prepare sleep operation
@@ -77,7 +81,8 @@ class RoutineGeneratorService
      */
     public function selectAction($actionsList)
     {
-        $actions = ['sleep'];
+        //todo : change this action
+        $actions = ['dormir'];
 
         $nbActions = rand(1,3);
 
@@ -86,7 +91,7 @@ class RoutineGeneratorService
             array_push($actions, $actionsList[$rand]);
         }
 
-        array_push($actions, 'sleep');
+        array_push($actions, 'dormir');
 
         return $actions;
     }
@@ -126,6 +131,7 @@ class RoutineGeneratorService
     public function getActionsTypeList()
     {
         $actionsTypeList = ['sleep', 'walk', 'meet', 'work', 'dance', 'play', 'eat'];
+        // todo: get action list from conf
         return $actionsTypeList;
 
     }

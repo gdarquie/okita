@@ -1,6 +1,12 @@
-textes:
+textes.correct:
   - "{{character.name}} ne dormit pas très bien. {{character.pronoun}} passa la nuit à se retourner dans le lit. {{character.name}} ne se sentait pas en forme au réveil."
   - "{{character.name}} dormit d’une traite entre {{action.start}} et {{action.end}} , d’un sommeil lourd et profond. Au réveil, {{character.pronoun}} se sentait parfaitement reposé.e."
   - "La nuit a été courte."
   - "Qu'espérer de plus qu'une bonne nuit de sommeil."
   - "Le sommeil survint rapidement. {{character.name}} dormit d'une traite jusqu'au matin."
+  - "Dormir, ce bienfait de tous les jours."
+  - "Rapidement, {{character.name}} s'endormit."
+
+textes.bad:
+  - "{{character.name}} dormit très mal."
+  - "La nuit fut horrible."

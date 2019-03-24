@@ -1,0 +1,3 @@
+textes:
+  - "{{character.name}} joua."
+  - "Jouer fait parfois du bien, c'est ce que fit {{character.name}} ."

@@ -56,34 +56,45 @@ class ActionWriterService
      */
     private function getAction($title)
     {
+        // all contents for actions are in yaml files in /Actions, we use finder to get all files
         $finder = new Finder();
         $finder->in('../src/Domain/Actions');
 
-        // get all files
+        // we catch all name of the file for converting it in action name ($title)
         $files = [];
         foreach ($finder as $file) {
+
             // get all files names and convert into action
-            preg_match('/.*\/(.*)\.yml/', $file, $output_array);
-            $fileName = strtolower($output_array[1]);
-            // associate files names with action path
-            $files[$fileName] =  $file->getRealPath();
+            preg_match('/(.*)\.y[a]ml/', $file->getBasename(), $output_array);
+
+            if((isset($output_array[1])))
+            {
+                $fileName = strtolower($output_array[1]);
+                // associate files names with action path
+                $files[$fileName] =  $file->getRealPath();
+            }
         }
 
-
-        //todo : get the name before .yml and after last/ and lowecase it
-
-        // vérifier si $title est dans la liste des actions, si non, faire un message par défaut
-
+        // check if action name has a yml file corresponding
         if(!array_key_exists($title, $files)){
             return '{{character.name}} fit une action.';
         }
 
         $value = Yaml::parseFile($files[$title]);
-        $textes = $value['textes'];
+
+        if(isset($value['textes.bad'])) {
+            // possibilité d'ajouter un score
+            $textes = $value['textes.bad'];
+        }
+
+        else{
+            $textes = $value['textes'];
+        }
 
         $random = (rand(1, count($textes))-1);
-        return $textes[$random];
 
+        //todo : save the action
+        return $textes[$random];
     }
 
     /**

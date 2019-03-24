@@ -35,6 +35,11 @@ class Action extends AbstractEntity
      */
     private $endAt;
 
+//    /**
+//     * @ORM\Column(type="int")
+//     */
+//    private $score;
+
     //???? todo: garder ou enlever?
     private $result;
 

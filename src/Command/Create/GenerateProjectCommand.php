@@ -46,12 +46,12 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
         $io->success('Configuration pathes and config setted!');
 
-        // Initialization
+        // Initialization, install SQL functions
         (new SQLService($this->em))->initialize();
 
         $io->success('Initialization succeeds!');
 
-        // Create Routines : launch command
+        // Create Routines : launch command for generating default and custom routines
         $buildRoutinesCommand = $this->getApplication()->find('app:build:routine');
 
         $progressBar = new ProgressBar($output, count($routines));
@@ -71,7 +71,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
         $io->success('Routine generation succeeds!');
 
-        // Launch command for character generation : launch command
+        // Launch command for characters generation : launch command
         $generateCharactersCommand = $this->getApplication()->find('app:generate:characters');
         $arguments = [
             'command' => 'app:build:routine',
@@ -104,7 +104,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
 
         // get default routines
         $routineGeneratorService = new RoutineGeneratorService($this->em);
-        $defaultRoutines = $routineGeneratorService->createRoutines($confRoutines['default']['total']);
+        $defaultRoutines = $routineGeneratorService->createRoutines($confRoutines['default']['total'], $confRoutines['default']['actions']);
 
         foreach ($defaultRoutines as $name => $routine){
             $routines[$name] = $routine;
