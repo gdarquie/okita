@@ -68,4 +68,17 @@ class ActionRepository extends ServiceEntityRepository
             ->getResult()
         ;
     }
+
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countActions()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(a) FROM '.Action::class.' a');
+
+        return $query->getSingleScalarResult();
+    }
 }

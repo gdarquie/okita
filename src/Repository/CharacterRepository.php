@@ -43,7 +43,7 @@ class CharacterRepository extends ServiceEntityRepository
      * @return mixed
      * @throws \Doctrine\ORM\NonUniqueResultException
      */
-    public function findRatio()
+    public function countBySex()
     {
         $query = $this->em->createQuery('SELECT COUNT(c.id) as total FROM '.Character::class.' c WHERE c.sex = :sex GROUP BY c.sex');
         $query->setParameter('sex', 'F');
@@ -56,5 +56,17 @@ class CharacterRepository extends ServiceEntityRepository
         return $stats;
     }
 
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countCharacters()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(c) FROM '.Character::class.' c');
+
+        return $query->getSingleScalarResult();
+    }
 
 }

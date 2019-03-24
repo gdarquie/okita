@@ -47,4 +47,16 @@ class RoutineRepository extends ServiceEntityRepository
 
         return $query->getOneOrNullResult();
     }
+
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countRoutines()
+    {
+        $query = $this->em->createQuery(
+            'SELECT COUNT(r) FROM '.Routine::class.' r');
+
+        return $query->getSingleScalarResult();
+    }
 }

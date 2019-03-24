@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Habit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bridge\Doctrine\RegistryInterface;
 
 /**
@@ -14,37 +15,26 @@ use Symfony\Bridge\Doctrine\RegistryInterface;
  */
 class HabitRepository extends ServiceEntityRepository
 {
-    public function __construct(RegistryInterface $registry)
+    /**
+     * @var EntityManagerInterface
+     */
+    private $em;
+
+    public function __construct(RegistryInterface $registry, EntityManagerInterface $em)
     {
         parent::__construct($registry, Habit::class);
+        $this->em = $em;
     }
 
-    // /**
-    //  * @return RoutineAction[] Returns an array of RoutineAction objects
-    //  */
-    /*
-    public function findByExampleField($value)
+    /**
+     * @return mixed
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
+    public function countHabits()
     {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('r.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
+        $query = $this->em->createQuery(
+            'SELECT COUNT(h) FROM '.Habit::class.' h');
 
-    /*
-    public function findOneBySomeField($value): ?RoutineAction
-    {
-        return $this->createQueryBuilder('r')
-            ->andWhere('r.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
+        return $query->getSingleScalarResult();
     }
-    */
 }

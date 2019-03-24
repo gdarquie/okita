@@ -34,67 +34,19 @@ class SynthesisController extends AbstractController
     public function index()
     {
         $statsCharacter = $this->getDoctrine()->getRepository(Character::class)->findStatsCharacters();
-        $statsAction = $this->getStatsAction();
-        $statsHabit = $this->getStatsHabit();
         $statsRoutine = $this->getStatsRoutine();
         $statsParams = $this->getStatsParams();
 
         return $this->render('synthesis.html.twig', [
-            'character' => $this->getRandomCharacter(rand($statsCharacter['min_id'],$statsCharacter['max_id'])),
+            'character' => $this->getDoctrine()->getRepository(Character::class)->findOneById(rand($statsCharacter['min_id'],$statsCharacter['max_id'])),
             'statsCharacter' => $statsCharacter,
-            'statsAction' => $statsAction,
-            'statsHabit' => $statsHabit,
-            'ratioSex' => $this->getDoctrine()->getRepository(Character::class)->findRatio(),
+            'statsAction' => $this->getDoctrine()->getRepository(Action::class)->countActions(),
+            'statsHabit' => $this->getDoctrine()->getRepository(Habit::class)->countHabits(),
+            'ratioSex' => $this->getDoctrine()->getRepository(Character::class)->countBySex(),
             'ageByDecade' => $this->getAgeByDecade(),
             'statsRoutine' => $statsRoutine,
             'statsParams' => $statsParams
         ]);
-    }
-
-    /**
-     * @param $randomId
-     * @return mixed
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function getRandomCharacter($randomId)
-    {
-        $query = $this->em->createQuery('SELECT c FROM '.Character::class.' c WHERE c.id = :id');
-        $query->setParameter('id', $randomId);
-        $character = $query->getSingleResult();
-
-        return $character;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function getStatsAction()
-    {
-        $query = $this->em->createQuery(
-            'SELECT COUNT(a.id) as total FROM '.Action::class.' a'
-        );
-        $stats = $query->getSingleResult();
-
-        return $stats;
-    }
-
-    /**
-     * @return mixed
-     * @throws \Doctrine\ORM\NoResultException
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    private function getStatsHabit()
-    {
-        // Total of habits
-        $query = $this->em->createQuery(
-            'SELECT COUNT(h.id) as total FROM '.Habit::class.' h'
-        );
-        $stats = $query->getSingleResult();
-
-        return $stats;
     }
 
     /**
@@ -120,23 +72,6 @@ class SynthesisController extends AbstractController
 
     /**
      * @return mixed
-     * @throws \Doctrine\ORM\NonUniqueResultException
-     */
-    public function getRatioSex(): array
-    {
-        $query = $this->em->createQuery('SELECT COUNT(c.id) as total FROM '.Character::class.' c WHERE c.sex = :sex GROUP BY c.sex');
-        $query->setParameter('sex', 'F');
-        $stats['female'] = $query->getSingleScalarResult();
-
-        $query = $this->em->createQuery('SELECT COUNT(c.id) as total FROM '.Character::class.' c WHERE c.sex = :sex GROUP BY c.sex');
-        $query->setParameter('sex', 'M');
-        $stats['male'] = $query->getSingleScalarResult();
-
-        return $stats;
-    }
-
-    /**
-     * @return mixed
      */
     public function getStatsFiction(): array
     {
@@ -158,10 +93,8 @@ class SynthesisController extends AbstractController
      */
     public function getStatsRoutine(): array
     {
-        $query = $this->em->createQuery(
-            'SELECT COUNT(r) FROM '.Routine::class.' r'
-        );
-        $stats['total'] = $query->getSingleScalarResult();
+        // Number of routines
+        $stats['total'] = $this->getDoctrine()->getRepository(Routine::class)->countRoutines();
 
         // Number of characters linked to habits
         $query = $this->em->createQuery(
