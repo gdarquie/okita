@@ -56,24 +56,8 @@ class ActionWriterService
      */
     private function getAction($title)
     {
-        // all contents for actions are in yaml files in /Actions, we use finder to get all files
-        $finder = new Finder();
-        $finder->in('../src/Domain/Actions');
-
-        // we catch all name of the file for converting it in action name ($title)
-        $files = [];
-        foreach ($finder as $file) {
-
-            // get all files names and convert into action
-            preg_match('/(.*)\.y[a]ml/', $file->getBasename(), $output_array);
-
-            if((isset($output_array[1])))
-            {
-                $fileName = strtolower($output_array[1]);
-                // associate files names with action path
-                $files[$fileName] =  $file->getRealPath();
-            }
-        }
+        // get all files from Action folder
+        $files = $this->getFiles();
 
         // check if action name has a yml file corresponding
         if(!array_key_exists($title, $files)){
@@ -161,4 +145,30 @@ class ActionWriterService
         return $translation;
     }
 
+    /**
+     * @return array
+     */
+    private function getFiles(): array
+    {
+        // all contents for actions are in yaml files in /Actions, we use finder to get all files
+        $finder = new Finder();
+        $finder->in('../src/Domain/Actions');
+
+        // we catch all name of the file for converting it in action name ($title)
+        $files = [];
+        foreach ($finder as $file) {
+
+            // get all files names and convert into action
+            preg_match('/(.*)\.y[a]ml/', $file->getBasename(), $output_array);
+
+            if((isset($output_array[1])))
+            {
+                $fileName = strtolower($output_array[1]);
+                // associate files names with action path
+                $files[$fileName] =  $file->getRealPath();
+            }
+        }
+
+        return $files;
+    }
 }
