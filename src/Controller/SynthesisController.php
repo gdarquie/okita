@@ -92,7 +92,7 @@ class SynthesisController extends AbstractController
     /**
      * @return array
      */
-    public function getStatsParams($project = 'la-degradation'): array
+    public function getStatsParams($project = 'project'): array
     {
         $rootPath = $this->getParameter('kernel.project_dir');
         $projectPath = $rootPath.'/src/Domain/Configuration';

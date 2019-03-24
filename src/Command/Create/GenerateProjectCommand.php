@@ -7,7 +7,6 @@ use App\Service\RoutineGeneratorService;
 use App\Service\SQLService;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\ArrayInput;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Style\SymfonyStyle;
@@ -20,9 +19,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
     protected function configure()
     {
         $this
-            ->setDescription('Generate a new project')
-            ->addArgument('project', InputArgument::OPTIONAL, 'Configuration slug you want to create')
-        ;
+            ->setDescription('Generate a new project');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -35,12 +32,8 @@ class GenerateProjectCommand extends AbstractSQLCommand
             '',
         ]);
 
-        // Preprare generation
-        $project = $input->getArgument('project');
-
         // Get project file and parse config file for setting vars
-        $projectFile = $this->getProjectFile($project);
-        $value = Yaml::parseFile($projectFile);
+        $value = Yaml::parseFile($this->getProjectFile());
         $totalCharacters = $value['characters']['total'];
         $routines = $this->collectRoutines($value['routines']);
 
@@ -52,24 +45,7 @@ class GenerateProjectCommand extends AbstractSQLCommand
         $io->success('Initialization succeeds!');
 
         // Create Routines : launch command for generating default and custom routines
-        $buildRoutinesCommand = $this->getApplication()->find('app:build:routine');
-
-        $progressBar = new ProgressBar($output, count($routines));
-        $progressBar->start();
-        foreach ($routines as $key => $value) {
-
-            $arguments = [
-                'command' => 'app:build:routine',
-                'name'    => $key,
-                'content'  => $value,
-            ];
-
-            $buildRoutinesCommandInput = new ArrayInput($arguments);
-            $buildRoutinesCommand->run($buildRoutinesCommandInput, $output);
-            $progressBar->advance();
-        }
-
-        $io->success('Routine generation succeeds!');
+        $io->success($this->createRoutines($routines, $output));
 
         // Launch command for characters generation : launch command
         $generateCharactersCommand = $this->getApplication()->find('app:generate:characters');
@@ -117,11 +93,33 @@ class GenerateProjectCommand extends AbstractSQLCommand
      * @param String $project
      * @return string
      */
-    private function getProjectFile(String $project): string
+    private function getProjectFile(): string
     {
         $rootPath = $this->container->get('kernel')->getProjectDir();
         $projectPath = $rootPath.'/src/Domain/Configuration';
 
-        return $projectPath.'/'.$project.'.yaml';
+        return $projectPath.'/project.yaml';
+    }
+
+    private function createRoutines($routines, $output)
+    {
+        $buildRoutinesCommand = $this->getApplication()->find('app:build:routine');
+
+        $progressBar = new ProgressBar($output, count($routines));
+        $progressBar->start();
+        foreach ($routines as $key => $value) {
+
+            $arguments = [
+                'command' => 'app:build:routine',
+                'name'    => $key,
+                'content'  => $value,
+            ];
+
+            $buildRoutinesCommandInput = new ArrayInput($arguments);
+            $buildRoutinesCommand->run($buildRoutinesCommandInput, $output);
+            $progressBar->advance();
+        }
+
+        return 'Routine generation succeeds!';
     }
 }
