@@ -9,20 +9,7 @@ class Uuid
      */
     public function gen_uuid()
     {
-        $uuid = array(
-            'time_low' => 0,
-            'time_mid' => 0,
-            'time_hi' => 0,
-            'clock_seq_hi' => 0,
-            'clock_seq_low' => 0,
-            'node' => array(),
-        );
-
-        $uuid['time_low'] = mt_rand(0, 0xffff) + (mt_rand(0, 0xffff) << 16);
-        $uuid['time_mid'] = mt_rand(0, 0xffff);
-        $uuid['time_hi'] = (4 << 12) | (mt_rand(0, 0x1000));
-        $uuid['clock_seq_hi'] = (1 << 7) | (mt_rand(0, 128));
-        $uuid['clock_seq_low'] = mt_rand(0, 255);
+        $uuid = $this->set();
 
         for ($i = 0; $i < 6; ++$i) {
             $uuid['node'][$i] = mt_rand(0, 255);
@@ -41,6 +28,29 @@ class Uuid
             $uuid['node'][4],
             $uuid['node'][5]
         );
+
+        return $uuid;
+    }
+
+    /**
+     * @return array
+     */
+    private function set()
+    {
+        $uuid = array(
+            'time_low' => 0,
+            'time_mid' => 0,
+            'time_hi' => 0,
+            'clock_seq_hi' => 0,
+            'clock_seq_low' => 0,
+            'node' => array(),
+        );
+
+        $uuid['time_low'] = mt_rand(0, 0xffff) + (mt_rand(0, 0xffff) << 16);
+        $uuid['time_mid'] = mt_rand(0, 0xffff);
+        $uuid['time_hi'] = (4 << 12) | (mt_rand(0, 0x1000));
+        $uuid['clock_seq_hi'] = (1 << 7) | (mt_rand(0, 128));
+        $uuid['clock_seq_low'] = mt_rand(0, 255);
 
         return $uuid;
     }
