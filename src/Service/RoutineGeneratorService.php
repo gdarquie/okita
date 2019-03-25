@@ -51,7 +51,7 @@ class RoutineGeneratorService
         $routineName = $this->generateRoutineName();
 
         // select actions connected to the routine
-        $actionsList = $this->selectAction($actionsListRaw);
+        $actionsList = $this->getActions($actionsListRaw);
 
         // prepare sleep operation
         $sleepInfo = $this->manageSleepAction();
@@ -63,7 +63,7 @@ class RoutineGeneratorService
         // durée des actions... supprimer des actions?
 
         // build actions
-        $routineActionsRaw = $this->buildActions($actionsList, $sleepInfo);
+        $routineActionsRaw = $this->buildSeries($actionsList, $sleepInfo);
 
         // convert actions into json
         $routineActions = $this->transformActions($routineActionsRaw);
@@ -79,7 +79,7 @@ class RoutineGeneratorService
      * @param $actionsList
      * @return array
      */
-    public function selectAction($actionsList)
+    public function getActions($actionsList)
     {
         //todo : change this action
         $actions = ['dormir'];
@@ -146,11 +146,13 @@ class RoutineGeneratorService
     }
 
     /**
+     * Generate a series of actions with the ones contained in the action list
+     *
      * @param $actionsList
      * @param $sleepInfo
      * @return array
      */
-    public function buildActions(Array $actionsList, Array $sleepInfo):array
+    public function buildSeries(Array $actionsList, Array $sleepInfo):array
     {
         $routineActions = [];
         $actionsListCount = count($actionsList);
@@ -161,31 +163,41 @@ class RoutineGeneratorService
 
         foreach ($actionsList as $key => $action) {
 
-            if ($key === 0 && $actionsList[0] === 'sleep') {
-                array_push($routineActions, [$actionsList[0], 0, $sleepInfo['exceedingTime']]);
-            }
-
-            else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
-                array_push($routineActions, [$action, $sleepInfo['begin'] ,"86400"]);
-            }
-
-            else {
-                //we had one to the end time of the last routine
-                $startRoutine = (end($routineActions)[2]+1);
-                $endRoutine = ($startRoutine+$actionTime);
-
-                array_push($routineActions, [$action, $startRoutine, $endRoutine]);
-            }
+            // add one action to the routine
+            array_push($routineActions, $this->returnAction($key, $action, $actionsList, $activitiesListCount, $sleepInfo, $actionTime, $routineActions));
         }
 
         return $routineActions;
+    }
+
+
+    private function returnAction($key, $action, $actionsList, $actionsListCount, $sleepInfo, $actionTime, $routineActions): array
+    {
+
+        if ($key === 0 && $actionsList[0] === 'sleep') {
+            $result = [$actionsList[0], 0, $sleepInfo['exceedingTime']];
+        }
+
+        else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
+            $result =  [$action, $sleepInfo['begin'] ,"86400"];
+        }
+
+        else {
+            //we had one to the end time of the last routine
+            $startRoutine = (end($routineActions)[2]+1);
+            $endRoutine = ($startRoutine+$actionTime);
+
+            $result = [$action, $startRoutine, $endRoutine];
+        }
+
+        return $result;
     }
 
     /**
      * convert action format into {"action", "start", "end"}
      *
      * @param array $listActionsRaw
-     * @return array
+     * @return string
      */
     public function transformActions(Array $listActionsRaw): string
     {
