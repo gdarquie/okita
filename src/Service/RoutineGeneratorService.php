@@ -165,14 +165,7 @@ class RoutineGeneratorService
 
             // special sleep action for the first and last actions
             if ($action === 'sleep') {
-                // the first action
-                if ($key === 0 ) {
-                    $result = [$action, 0, $sleepInfo['exceedingTime']];
-                }
-                // the last action
-                else if ($key === ($actionsListCount-1)) {
-                    $result =  [$action, $sleepInfo['begin'] ,"86400"];
-                }
+                $result = $this->computeSleepAction($key, $sleepInfo, $actionsListCount);
             }
 
             // normal action
@@ -184,6 +177,20 @@ class RoutineGeneratorService
         }
 
         return $routineActions;
+    }
+
+    private function computeSleepAction($key, $sleepInfo, $actionsListCount)
+    {
+        // the first action
+        if ($key === 0 ) {
+            $result = ['sleep', 0, $sleepInfo['exceedingTime']];
+        }
+        // the last action
+        else if ($key === ($actionsListCount-1)) {
+            $result =  ['sleep', $sleepInfo['begin'] ,"86400"];
+        }
+
+        return $result;
     }
 
     /**
