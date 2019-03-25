@@ -28,12 +28,14 @@ class ActionWriterService
      */
     private $action;
 
+    /**
+     * ActionWriterService constructor.
+     * @param Character $character
+     */
     public function __construct(Character $character)
     {
         $this->character = $character;
         $this->humanTimeConverterService = new HumanTimeConverterService();
-
-
     }
 
     /**
@@ -92,6 +94,10 @@ class ActionWriterService
         return $result;
     }
 
+    /**
+     * @param $string
+     * @return bool
+     */
     public function getSpecialString($string)
     {
         $result = false;
@@ -117,22 +123,7 @@ class ActionWriterService
 
         foreach($arrayFiltered as $key => $value)
         {
-            if($arrayText[$key] === '{{character.name}}')
-            {
-                $arrayText[$key] = $this->character->getName();
-            }
-
-            else if ($arrayText[$key] === '{{action.start}}')
-            {
-                $arrayText[$key] = $this->action->getStartAt();
-                $arrayText[$key] = $this->humanTimeConverterService->convert($arrayText[$key], 'default');
-            }
-
-            else if ($arrayText[$key] === '{{action.end}}')
-            {
-                //todo : add human time conversion
-                $arrayText[$key]  = $this->action->getEndAt();
-            }
+            $arrayText[$key] = $this->convert($arrayText[$key]);
         }
 
         // Transform pronoun
@@ -170,5 +161,29 @@ class ActionWriterService
         }
 
         return $files;
+    }
+
+    /**
+     * @param $string
+     * @return float|int|mixed
+     */
+    private function convert($string)
+    {
+        $result = $string;
+
+        switch ($string) {
+            case '{{character.name}}':
+                $result = $this->character->getName();
+                break;
+            case '{{action.start}}':
+                $result = $this->action->getStartAt();
+                $result = $this->humanTimeConverterService->convert($result, 'default');
+                break;
+            case '{{action.end}}':
+                $result = $this->action->getEndAt();
+                break;
+        }
+
+        return $result;
     }
 }
