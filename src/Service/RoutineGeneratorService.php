@@ -163,34 +163,40 @@ class RoutineGeneratorService
 
         foreach ($actionsList as $key => $action) {
 
+            // the first action
+            if ($key === 0 && $actionsList[0] === 'sleep') {
+                $result = [$actionsList[0], 0, $sleepInfo['exceedingTime']];
+            }
+
+            // the last action
+            else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
+                $result =  [$action, $sleepInfo['begin'] ,"86400"];
+            }
+
+            else {
             // add one action to the routine
-            array_push($routineActions, $this->returnAction($key, $action, $actionsList, $activitiesListCount, $sleepInfo, $actionTime, $routineActions));
+                $result = $this->returnAction($action, $actionTime, $routineActions);
+            }
+
+            array_push($routineActions, $result);
         }
 
         return $routineActions;
     }
 
-
-    private function returnAction($key, $action, $actionsList, $actionsListCount, $sleepInfo, $actionTime, $routineActions): array
+    /**
+     * @param $action
+     * @param $actionTime
+     * @param $routineActions
+     * @return array
+     */
+    private function returnAction($action, $actionTime, $routineActions): array
     {
+        //we had one to the end time of the last routine
+        $startRoutine = (end($routineActions)[2]+1);
+        $endRoutine = ($startRoutine+$actionTime);
 
-        if ($key === 0 && $actionsList[0] === 'sleep') {
-            $result = [$actionsList[0], 0, $sleepInfo['exceedingTime']];
-        }
-
-        else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
-            $result =  [$action, $sleepInfo['begin'] ,"86400"];
-        }
-
-        else {
-            //we had one to the end time of the last routine
-            $startRoutine = (end($routineActions)[2]+1);
-            $endRoutine = ($startRoutine+$actionTime);
-
-            $result = [$action, $startRoutine, $endRoutine];
-        }
-
-        return $result;
+        return [$action, $startRoutine, $endRoutine];
     }
 
     /**
