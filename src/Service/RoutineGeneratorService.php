@@ -163,18 +163,20 @@ class RoutineGeneratorService
 
         foreach ($actionsList as $key => $action) {
 
-            // the first action
-            if ($key === 0 && $actionsList[0] === 'sleep') {
-                $result = [$actionsList[0], 0, $sleepInfo['exceedingTime']];
+            // special sleep action for the first and last actions
+            if ($action === 'sleep') {
+                // the first action
+                if ($key === 0 ) {
+                    $result = [$action, 0, $sleepInfo['exceedingTime']];
+                }
+                // the last action
+                else if ($key === ($actionsListCount-1)) {
+                    $result =  [$action, $sleepInfo['begin'] ,"86400"];
+                }
             }
 
-            // the last action
-            else if ($key === ($actionsListCount-1) && $actionsList[($actionsListCount-1)] === 'sleep') {
-                $result =  [$action, $sleepInfo['begin'] ,"86400"];
-            }
-
+            // normal action
             else {
-            // add one action to the routine
                 $result = $this->returnAction($action, $actionTime, $routineActions);
             }
 
