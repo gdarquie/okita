@@ -79,7 +79,7 @@ class RoutineGeneratorService
      * @param $actionsList
      * @return array
      */
-    public function getActions($actionsList)
+    public function getActions(Array $actionsList)
     {
         //todo : change this action
         $actions = ['dormir'];
