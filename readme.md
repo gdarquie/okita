@@ -27,10 +27,10 @@ yarn encore production
 ### Create project
 
 ```
-php bin/console app:generate:project <projectName>
+php bin/console app:generate:project
 ```
 
 ### Clean project
 ```
-php bin/console app:generate:clean <projectName>
+php bin/console app:generate:clean
 ```

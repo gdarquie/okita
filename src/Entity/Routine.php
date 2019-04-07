@@ -25,6 +25,11 @@ class Routine extends AbstractEntity
     private $characters;
 
     /**
+     * @ORM\Column(type="integer", nullable=false)
+     */
+    private $day;
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -70,6 +75,22 @@ class Routine extends AbstractEntity
     public function setCharacters($characters): void
     {
         $this->characters = $characters;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getDay()
+    {
+        return $this->day;
+    }
+
+    /**
+     * @param mixed $day
+     */
+    public function setDay($day): void
+    {
+        $this->day = $day;
     }
 
 }

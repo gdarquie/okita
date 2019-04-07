@@ -86,9 +86,7 @@ class ActionSQL
             FOR v_habit IN
               SELECT name, start, "end" as v_end FROM habit WHERE routine_id = v_routine.id
             LOOP
-                RAISE NOTICE '%', v_habit;
-            
-            PERFORM insert_action(v_habit.name, (start_day + v_habit.start), (start_day + v_habit.v_end), v_character_id);
+                PERFORM insert_action(v_habit.name, (start_day + v_habit.start), (start_day + v_habit.v_end), v_character_id);
             END LOOP;      
         END;
         $$ LANGUAGE plpgsql;
