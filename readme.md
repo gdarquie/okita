@@ -30,6 +30,13 @@ yarn encore production
 php bin/console app:generate:project
 ```
 
+### Generate action
+
+```
+php bin/console app:generate:actions 1 10
+```
+
+
 ### Clean project
 ```
 php bin/console app:generate:clean
