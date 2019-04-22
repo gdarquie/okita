@@ -72,19 +72,20 @@ class GenerateProjectCommand extends AbstractSQLCommand
         // get custom routines from conf
         $customRoutines = $confRoutines['custom'];
 
-        foreach ($customRoutines as $name => $routine) {
-            $routineName = (array_keys($routine))[0];
-            $routineAction = $routine[$routineName];
-            $routines[$routineName] = $routineAction;
+        foreach ($customRoutines as $name => $action) {
+            //convert routine in something like {{"dormir","18000","36000"},{"agir","36001","54000"}, {"dormir","54001","62000"}}
+            $routines[$name] = json_encode($action);
         }
 
+        // todo : keep default routines?
         // get default routines
-        $routineGeneratorService = new RoutineGeneratorService($this->em);
-        $defaultRoutines = $routineGeneratorService->createRoutines($confRoutines['default']['total'], $confRoutines['default']['actions']);
+//        $routineGeneratorService = new RoutineGeneratorService($this->em);
+//        $defaultRoutines = $routineGeneratorService->createRoutines($confRoutines['default']['total'], $confRoutines['default']['actions']);
+//
+//        foreach ($defaultRoutines as $name => $routine){
+//            $routines[$name] = $routine;
+//        }
 
-        foreach ($defaultRoutines as $name => $routine){
-            $routines[$name] = $routine;
-        }
 
         return $routines;
     }

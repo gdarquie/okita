@@ -42,6 +42,7 @@ class RoutineGeneratorService
      */
     public function createRoutine($actionsListRaw = [], $params = [])
     {
+        dd($actionsListRaw);
 
         if(!$actionsListRaw) {
             $actionsListRaw = $this->getActionsTypeList();
