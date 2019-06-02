@@ -66,17 +66,18 @@ class GenerateCharactersCommand extends Command
             ini_set('memory_limit', '512M');
         }
 
-        $generator = new GeneratorService($this->em);
+        $generator = new GeneratorService();
         $progressBar = new ProgressBar($output, $characterNumber);
         $progressBar->start();
 
-        for($i = 0; $i < $characterNumber; $i++)
+        // save all bases characters
+        for($currentLine = 0; $currentLine < $characterNumber; $currentLine++)
         {
             // generate character
-            $character = $generator->generateCharacter();
+            $character = $generator->generateBaseCharacter();
 
             // save character
-            $this->saveCharacter($character, $generator, $progressBar, $characterNumber);
+            $this->saveCharacter($character, $progressBar, $characterNumber, $currentLine);
         }
 
         $progressBar->finish();
@@ -89,16 +90,15 @@ class GenerateCharactersCommand extends Command
 
     /**
      * @param $character
-     * @param $generator
      * @param $progressBar
      * @param $characterNumber
      */
-    protected function saveCharacter($character, $generator, $progressBar, $characterNumber)
+    protected function saveCharacter($character, $progressBar, $characterNumber, $currentLine)
     {
         $this->em->persist($character);
 
-        // we flush and clear every 1000 turns
-        if($characterNumber % 1000  == 0)
+        // we flush and clear every 1000 turns  or if it is the last turn
+        if($characterNumber % 1000  == 0 || ($currentLine+1) == $characterNumber)
         {
             $this->em->flush();
             $this->em->clear();

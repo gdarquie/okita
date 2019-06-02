@@ -45,6 +45,11 @@ class Character extends AbstractEntity
     private $routines;
 
     /**
+     * @ORM\ManyToOne(targetEntity="App\Entity\Work", inversedBy="characters")
+     */
+    private $works;
+
+    /**
      * @return mixed
      */
     public function getName()
@@ -164,5 +169,17 @@ class Character extends AbstractEntity
         ($this->getSex() === 'F') ? $pronoun = 'elle' : $pronoun = 'il';
 
         return $pronoun;
+    }
+
+    public function getWorks(): ?Work
+    {
+        return $this->works;
+    }
+
+    public function setWorks(?Work $works): self
+    {
+        $this->works = $works;
+
+        return $this;
     }
 }
