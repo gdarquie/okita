@@ -36,13 +36,14 @@ class RoutineGeneratorService
 
         return $routines;
     }
-    
+
     /**
-     * @return array
+     * @param array $actionsListRaw
+     * @param array $params
+     * @return mixed
      */
     public function createRoutine($actionsListRaw = [], $params = [])
     {
-
         if(!$actionsListRaw) {
             $actionsListRaw = $this->getActionsTypeList();
         }
