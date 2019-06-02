@@ -38,12 +38,11 @@ class RoutineGeneratorService
     }
 
     /**
-     * @param $character
      * @param array $actionsListRaw
      * @param array $params
      * @return mixed
      */
-    public function createRoutine($character, $actionsListRaw = [], $params = [])
+    public function createRoutine($actionsListRaw = [], $params = [])
     {
         if(!$actionsListRaw) {
             $actionsListRaw = $this->getActionsTypeList();
@@ -94,7 +93,7 @@ class RoutineGeneratorService
         }
 
         array_push($actions, 'dormir');
-dd($actions);
+
         return $actions;
     }
 
