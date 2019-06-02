@@ -68,15 +68,15 @@ abstract class AbstractEntity
     /**
      * @return datetime
      */
-    public function getCreatedAt(): datetime
+    public function getCreatedAt()
     {
         return $this->createdAt;
     }
 
     /**
-     * @param datetime $createdAt
+     * @param \Datetime $createdAt
      */
-    public function setCreatedAt(datetime $createdAt): void
+    public function setCreatedAt(\Datetime $createdAt): void
     {
         $this->createdAt = $createdAt;
     }
@@ -84,15 +84,15 @@ abstract class AbstractEntity
     /**
      * @return datetime
      */
-    public function getUpdatedAt(): datetime
+    public function getUpdatedAt()
     {
         return $this->updatedAt;
     }
 
     /**
-     * @param datetime $updatedAt
+     * @param \Datetime $updatedAt
      */
-    public function setUpdatedAt(datetime $updatedAt): void
+    public function setUpdatedAt(\Datetime $updatedAt): void
     {
         $this->updatedAt = $updatedAt;
     }

@@ -2,8 +2,10 @@
 
 namespace App\Command\Create;
 
+use App\Service\Generator\GeneratorService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -36,6 +38,11 @@ class GenerateCharactersCommand extends Command
         ;
     }
 
+    /**
+     * @param InputInterface $input
+     * @param OutputInterface $output
+     * @return int|void|null
+     */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $output->writeln([
@@ -44,11 +51,60 @@ class GenerateCharactersCommand extends Command
             '',
         ]);
 
-        $number = $input->getArgument('number');
+        $characterNumber = $input->getArgument('number');
 
-        $statement = $this->connection->executeQuery('SELECT generate_characters('.$number.')');
-        $statement->fetchAll();
+        // max number of character generation is 100K
+        if($characterNumber > 100000)
+        {
+            $characterNumber = 100000;
+            $output->writeln('Max character number is 100 000!');
+        }
 
-        $output->writeln($number.' characters successfully generated!');
+        // we upgrade memory limit for big import
+        if($characterNumber > 10000)
+        {
+            ini_set('memory_limit', '512M');
+        }
+
+        $generator = new GeneratorService($this->em);
+        $progressBar = new ProgressBar($output, $characterNumber);
+        $progressBar->start();
+
+        for($i = 0; $i < $characterNumber; $i++)
+        {
+            // generate character
+            $character = $generator->generateCharacter();
+
+            // save character
+            $this->saveCharacter($character, $generator, $progressBar, $characterNumber);
+        }
+
+        $progressBar->finish();
+
+//        $statement = $this->connection->executeQuery('SELECT generate_characters('.$number.')');
+//        $statement->fetchAll();
+
+        $output->writeln(' '.$characterNumber.' characters successfully generated!');
     }
+
+    /**
+     * @param $character
+     * @param $generator
+     * @param $progressBar
+     * @param $characterNumber
+     */
+    protected function saveCharacter($character, $generator, $progressBar, $characterNumber)
+    {
+        $this->em->persist($character);
+
+        // we flush and clear every 1000 turns
+        if($characterNumber % 1000  == 0)
+        {
+            $this->em->flush();
+            $this->em->clear();
+        }
+
+        $progressBar->advance();
+    }
+
 }
